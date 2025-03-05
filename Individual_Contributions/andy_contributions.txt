@@ -7,3 +7,9 @@ Submission 2:
 Participated in 6-3-5 and Brainstorming
 Made Mind Maps
 Worked on Decision Tables
+
+
+Submission 3:
+Worked on budget for device
+Made 3 test plans (durability, full range of motion on each finger, ability to fit on common hand)
+
