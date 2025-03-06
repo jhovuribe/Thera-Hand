@@ -19,3 +19,6 @@ clients to have more control over their recovery.
 
 ## Design Objective
 We aim to reduce physical therapy visits by up to 50%, subsequently reducing insurance costs.
+
+Team Progress Site:
+https://instinctive-raft-cfa.notion.site/Project-Hub-1837bff9001a8023af18f2008f6e7fae
