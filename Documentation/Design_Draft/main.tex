@@ -267,10 +267,7 @@ Design a cost-effective solution that is user-friendly and streamlines the rehab
     % Add more rows as needed
 \end{longtable}
 \section{Concepts Considered}
-
-\subsection{Conceptualizations}
-
-\subsection{Brain Storming Output}
+\subsection{Brainstorm}
 \includepdf[pages=-]{brainstorm.pdf}
 \subsection{6-3-5 Method}
 \includepdf[pages=-]{635_Designs.pdf}
@@ -282,6 +279,42 @@ Design a cost-effective solution that is user-friendly and streamlines the rehab
 \section{Concept Selection}
 
 \subsection{Decision Table}
+\begin{table}[h]
+    \noindent\hspace{-4.5cm}
+    \small
+    \begin{tabular}{l c | c c | c c | c c}
+        \toprule
+        \textbf{Criteria} & \textbf{Weight (\%)} & \multicolumn{2}{c|}{\textbf{Design 1 (Attached Fingers)}} & \multicolumn{2}{c|}{\textbf{Design 2 (Prosthetic Hand)}} & \multicolumn{2}{c}{\textbf{Design 3 (Pneumatic)}} \\
+        \cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8}
+        & & Raw & Weighted & Raw & Weighted & Raw & Weighted \\
+        \midrule
+        Wearability (person) & 20 & 8 & 160 & 7 & 140 & 7 & 140 \\
+        Cost & 30 & 9 & 270 & 6 & 180 & 3 & 90 \\
+        Damage Likelihood (device) & 10 & 8 & 80 & 6 & 60 & 5 & 50 \\
+        Power Consumption & 5 & 10 & 50 & 8 & 40 & 6 & 30 \\
+        Weight & 15 & 9 & 135 & 5 & 75 & 4 & 60 \\
+        Functionality & 20 & 6 & 120 & 9 & 180 & 10 & 200 \\
+        \midrule
+        \textbf{Total} & & & 815 & & 675 & & 570 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l c}
+        \toprule
+        \textbf{Criteria} & \textbf{Weight (\%)} \\
+        \midrule
+        Wearability & 20 \\
+        Cost & 30 \\
+        Damage Likelihood & 10 \\
+        Power Consumption & 5 \\
+        Maintenance & 15 \\
+        Weight & 20 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \section{Detail of Design}
 Majority of Document
@@ -406,42 +439,6 @@ eco-friendliness.
 \section{Models and Simulations}
 
 \section{Decision Table Inputs}
-\begin{table}[h]
-    \noindent\hspace{-4.5cm}
-    \small
-    \begin{tabular}{l c | c c | c c | c c}
-        \toprule
-        \textbf{Criteria} & \textbf{Weight (\%)} & \multicolumn{2}{c|}{\textbf{Design 1 (Attached Fingers)}} & \multicolumn{2}{c|}{\textbf{Design 2 (Prosthetic Hand)}} & \multicolumn{2}{c}{\textbf{Design 3 (Pneumatic)}} \\
-        \cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8}
-        & & Raw & Weighted & Raw & Weighted & Raw & Weighted \\
-        \midrule
-        Wearability (person) & 20 & 8 & 160 & 7 & 140 & 7 & 140 \\
-        Cost & 30 & 9 & 270 & 6 & 180 & 3 & 90 \\
-        Damage Likelihood (device) & 10 & 8 & 80 & 6 & 60 & 5 & 50 \\
-        Power Consumption & 5 & 10 & 50 & 8 & 40 & 6 & 30 \\
-        Weight & 15 & 9 & 135 & 5 & 75 & 4 & 60 \\
-        Functionality & 20 & 6 & 120 & 9 & 180 & 10 & 200 \\
-        \midrule
-        \textbf{Total} & & & 815 & & 675 & & 570 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-\begin{table}[h]
-    \centering
-    \begin{tabular}{l c}
-        \toprule
-        \textbf{Criteria} & \textbf{Weight (\%)} \\
-        \midrule
-        Wearability & 20 \\
-        Cost & 30 \\
-        Damage Likelihood & 10 \\
-        Power Consumption & 5 \\
-        Maintenance & 15 \\
-        Weight & 20 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
 
 \section{Test Plan}
 \subsubsection{Ability to be turned on/off}
