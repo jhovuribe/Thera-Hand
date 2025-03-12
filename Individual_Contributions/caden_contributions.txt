@@ -11,3 +11,10 @@ Submission 3:
 Created Ethics statement.
 Created 3 tests for test plan.
 Wrote the LaTeX write up.
+
+Design Draft:
+Updated my test plans.
+Wrote the LaTeX write up.
+
+Presentation:
+Did Conceptualization, section #3 of slides.
