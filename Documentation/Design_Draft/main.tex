@@ -11,6 +11,7 @@
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{titlesec}
+\usepackage{siunitx}
 \setcounter{secnumdepth}{4}
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
@@ -23,29 +24,43 @@
 \begin{document}
 \begin{titlepage}
     \centering
+    \vspace*{4cm}
+
+    % Main project title
+    {\Huge \bfseries Thera-Hand\par}
+    \vspace{0.75cm}
+
+    % Subtitle
+    {\LARGE \bfseries Draft Design Document\par}
+    \vspace{1.5cm}
+
+    % Course information
+    {\Large CSE 123A\par}
+    \vspace{0.5cm}
+
+    % Date
+    {\Large March 11, 2025\par}
     \vfill
-    {\Huge \bfseries Project Documentation 3\par}
-    \vspace{1.5cm}
-    {\Huge
-        Akash Srinivasan \par \ \par
-        Caden Roberts \par \ \par
-        Jhovanny Uribe \par \ \par
-        Andy Vo \par \ \par
-        Ethan Cesario \par \ \par
-        Aliyaa Islam \par \ \par
+
+    % Team Members
+    {\large
+        Akash Srinivasan \par
+        Caden Roberts \par
+        Jhovanny Uribe \par
+        Andy Vo \par
+        Ethan Cesario \par
+        Aliyaa Islam \par
     }
+
     \vspace{1cm}
-    {\Huge \bfseries Mar 11 2025\par}
-    \vspace{1.5cm}
-    \href{https://github.com/jhovuribe/Physical-Therapy-Hand-Rehabilitation-Device/}{\Huge \bfseries Github}
+    % GitHub Link
+    \href{https://github.com/jhovuribe/Physical-Therapy-Hand-Rehabilitation-Device/}{\LARGE \bfseries GitHub Repository}
+    
 \end{titlepage}
 
-\section{\bf{-----Cover Page-----}}
 
-
-\section{\bf{-----Front Matter-----}}
 \section{Executive Summary}
-This document details the design, development, and analysis of a physical therapy hand rehabilitation device, aimed at enhancing patient adherence to therapy routines through remote monitoring and automation. The project follows a structured approach, integrating ethical considerations, user-centered design, and engineering analysis.
+This document details the design, development, and analysis of a hand rehabilitation device to be used in conjunction with physical therapy, titled "Thera-Hand," to improve patient adherence to therapy routines through remote monitoring and automation. The project follows a structured approach, integrating ethical considerations, user-centered design, and engineering analysis.
 
 \section{Ethics Statement}
 We reference: \href{https://www.apta.org/siteassets/pdfs/policies/codeofethicshods06-20-28-25.pdf}{The Code of Ethics for the Physical Therapist} \\ \\ 
@@ -63,10 +78,46 @@ that benefit patients and clients and society.
 \item Principle 8: Physical therapists shall participate in efforts to meet the health needs of people locally, nationally, or globally.
 \end{itemize}
 
-\section{Table of Contents}
+\begin{titlepage}
+    \centering
+    
+    {\Huge \bfseries Table of Contents\par}
+    \vspace{2cm}
+    
+    \begin{flushleft}
+    {\Large \textbf{Body}} \hfill \textbf{1} \\[1cm]
 
+    {\Large \textbf{Background}} \hfill \textbf{2} \\[0.5cm]
+    \hspace{1cm} Personas \hfill \textbf{3} \\[1cm]
 
-\section{\bf{-----Body-----}}
+    {\Large \textbf{Problem Definition}} \hfill \textbf{4} \\[0.5cm]
+    \hspace{1cm} Need \& Goal Statements \hfill \textbf{5} \\[0.5cm]
+    \hspace{1cm} Design Objectives \hfill \textbf{6} \\[1cm]
+
+    {\Large \textbf{Concepts Considered}} \hfill \textbf{7} \\[0.5cm]
+    \hspace{1cm} Conceptualizations \hfill \textbf{8} \\[0.5cm]
+    \hspace{1cm} Brain Storming Output \hfill \textbf{9} \\[1cm]
+
+    {\Large \textbf{Concept Selection}} \hfill \textbf{10} \\[0.5cm]
+    \hspace{1cm} Decision Table \hfill \textbf{11} \\[1cm]
+
+    {\Large \textbf{Detail of Design}} \hfill \textbf{12} \\[1cm]
+
+    {\Large \textbf{Economic Analysis}} \hfill \textbf{20} \\[0.5cm]
+    \hspace{1cm} Design for Manufacture \& Assembly \hfill \textbf{21} \\[0.5cm]
+    \hspace{1cm} Life Cycle Assessment \hfill \textbf{22} \\[1cm]
+
+    {\Large \textbf{Outstanding Issues}} \hfill \textbf{25} \\[1cm]
+
+    {\Large \textbf{Appendices}} \hfill \textbf{27} \\[0.5cm]
+    \hspace{1cm} Models and Simulations \hfill \textbf{28} \\[0.5cm]
+    \hspace{1cm} Decision Table Inputs \hfill \textbf{29} \\[0.5cm]
+    \hspace{1cm} Test Plan \hfill \textbf{30} \\[0.5cm]
+    \hspace{1cm} Test Results \hfill \textbf{31} \\[1cm]
+    \end{flushleft}
+    
+\end{titlepage}
+
 \section{Background}
 
 \subsection{Personas}
@@ -449,10 +500,10 @@ eco-friendliness.
 \section{Outstanding Issues}
 
 
-\section{\bf{-----Appendices-----}}
-\subsection{Models and Simulations} 
+\subsection{Models and Simulations}
 
 \includepdf[pages=-]{sketch-merged.pdf}
+\includepdf[pages=-]{Assembly_therahand.png}
 
 
 \subsection{Decision Table Inputs}
@@ -567,7 +618,7 @@ The device should be able to move in the full range of motion for each finger. D
 
 \paragraph{External factors} Ambient temperature variations, Device vibrations and mechanical inconsistencies, Any potential latency in response times.
 
-\paragraph{Equipment} Glove with integrated flex sensors, Voltage divider circuit with known resistor (? ohms), Arduino, Computer for data logging and visualization.
+\paragraph{Equipment} Glove with integrated flex sensors, Voltage divider circuit with known resistor (\si{\ohm}), Arduino, Computer for data logging and visualization.
 
 \paragraph{Steps}
 \begin{enumerate}
