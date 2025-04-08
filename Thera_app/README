@@ -1,0 +1,11 @@
+This is a react app in development for the Thera-Hand Device
+
+Check you have node and npm, and install dependencies:
+
+cadenroberts@Cadens-Air thera_app % node --version
+v22.11.0
+cadenroberts@Cadens-Air thera_app % npm --version
+10.9.0
+cadenroberts@Cadens-Air thera_app % npm install
+
+To start the app, run "npm run dev" and go to localhost:3000
