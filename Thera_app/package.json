@@ -1,0 +1,45 @@
+{
+  "name": "cse186-assignment4",
+  "type": "module",
+  "version": "3.0.0",
+  "description": "CSE186 Assignment 4",
+  "author": "David Harrison <dcharris@ucsc.edu>",
+  "license": "UNLICENSED",
+  "repository": "none",
+  "dependencies": {
+    "@emotion/react": "*",
+    "@emotion/styled": "*",
+    "@mui/icons-material": "*",
+    "@mui/material": "*",
+    "prop-types": "*",
+    "react": "*",
+    "react-dom": "*",
+    "react-router-dom": "*",
+    "date-fns": "*"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "*",
+    "@testing-library/react": "*",
+    "@testing-library/user-event": "*",
+    "@vitejs/plugin-react": "*",
+    "@vitest/coverage-v8": "*",
+    "bestzip": "*",
+    "eslint": "8.57.0",
+    "eslint-config-google": "*",
+    "eslint-plugin-react": "*",
+    "eslint-plugin-react-hooks": "*",
+    "eslint-plugin-react-refresh": "*",
+    "jsdom": "*",
+    "vite": "*",
+    "vite-plugin-eslint": "*",
+    "vitest": "*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --port 3000",
+    "lint": "eslint src --ext js,jsx --no-inline-config --max-warnings 0",
+    "test": "vitest run --coverage",
+    "watch": "vitest",
+    "zip": "bestzip CSE186-Assignment4-Submission.zip src/* src/__tests__/*"
+  }
+}
