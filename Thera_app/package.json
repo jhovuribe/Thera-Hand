@@ -15,7 +15,8 @@
     "react": "*",
     "react-dom": "*",
     "react-router-dom": "*",
-    "date-fns": "*"
+    "date-fns": "*",
+    "material-ui-popup-state": "*"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "*",
