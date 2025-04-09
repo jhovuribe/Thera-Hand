@@ -250,7 +250,11 @@ function ResponsiveDrawer() {
             </Grid>
           </Grid>
           <br/>
-          <Grid container spacing = {`calc(100% - ${1.3025 * drawerWidth}px)`}>
+          <Grid container   spacing={0} // spacing must be a number — not a string! So you can’t use calc() here
+  sx={{
+    '--custom-spacing': 'calc(500vw / 30)',
+    gap: 'var(--custom-spacing)',
+  }}>
             <Grid size="grow">
               <Item><Typography variant='overline'>Pinky<br/>1000</Typography></Item>
             </Grid>
@@ -264,8 +268,9 @@ function ResponsiveDrawer() {
             position: 'absolute',
             bottom: 20,
             right: 15,
+            top: 250,
             width: isMobile ? '100%' : `calc(100% - ${1.5025 * drawerWidth}px)`,
-            height: '70%',
+            height: '65%',
             display: 'flex',
             justifyContent: 'flex-end',
             alignItems: 'flex-end',
