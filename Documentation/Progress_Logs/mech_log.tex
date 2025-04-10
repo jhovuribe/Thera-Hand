@@ -1,0 +1,58 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Thera-Hand Project}
+\rfoot{\thepage}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\begin{document}
+
+\begin{center}
+    {\Huge\bfseries Mech Log}
+\end{center}
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{Instructions}
+To make a new log entry, copy and paste the block below:
+
+\begin{verbatim}
+\section*{YYYY-MM-DD}
+[Write a description of what was done. Be concise but specific.]
+
+\vspace{1em}
+\noindent\textit{Contributor: Your Name}
+\vspace{1em}
+\hrule
+\end{verbatim}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% Example log entries below
+
+\section*{2025-04-10}
+Assembled preliminary index finger joint and tested basic flexion movement. Observed minor binding at the second knuckle due to shaft misalignment—plan to revise CAD.
+
+\vspace{1em}
+\noindent\textit{Contributor: John Doe}
+\vspace{1em}
+\hrule
+
+\section*{2025-04-11}
+Reinforced pulley base with PLA bracket. Investigated elastic tensioning for tendon return—experimented with 3 types of bands and logged tension results.
+
+\vspace{1em}
+\noindent\textit{Contributor: Jane Smith}
+\vspace{1em}
+\hrule
+
+% Add new entries below this line
+
+\end{document}
