@@ -35,6 +35,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import './App.css';
 // https://mui.com/material-ui/react-drawer/ RESPONSIVE DRAWER
 // chatgpt.com & my brain worked together with responsive drawer
 // as the base for this assignment.
