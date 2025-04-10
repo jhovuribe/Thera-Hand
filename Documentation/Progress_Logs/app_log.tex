@@ -1,0 +1,51 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Thera-Hand Project}
+\rfoot{\thepage}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\begin{document}
+
+\begin{center}
+    {\Huge\bfseries App Log}
+\end{center}
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{Instructions}
+To make a new log entry, copy and paste the block below:
+
+\begin{verbatim}
+\section*{YYYY-MM-DD}
+[Write a description of what was done. Be concise but specific.]
+
+\vspace{1em}
+\noindent\textit{Contributors: Your Name}
+\vspace{1em}
+\hrule
+\end{verbatim}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% Example log entries below
+
+\section*{2025-04-10}
+Caden developed Thera-App v0.1 with foundational UI and navigation. Jhovanny integrated firebase authentication and database setup. Testing needed for ESP32 connectivity and data handling.
+
+\vspace{1em}
+\noindent\textit{Contributors: Caden, Jhovanny}
+\vspace{1em}
+\hrule
+
+
+% Add new entries below this line
+
+\end{document}
