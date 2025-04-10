@@ -1,1 +1,23 @@
 /* Your App styles go here */
+/* Selected day (date bubble) */
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #ed6c02 !important;  /* MUI warning.main */
+  color: white !important;
+}
+
+/* Selected time slot (for time picker) */
+.react-datepicker__time-list-item--selected {
+  background-color: #ed6c02 !important;  /* MUI warning.main */
+  color: white !important;
+}
+
+/* Hover over selectable day */
+.react-datepicker__day:hover {
+  background-color: #f29f3f !important;  /* lighter warning color */
+}
+
+/* Hover over time slots */
+.react-datepicker__time-list-item:hover {
+  background-color: #f29f3f !important;
+}
