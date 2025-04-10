@@ -1,4 +1,4 @@
-# Physical-Therapy-Hand-Rehabilitation-Device (Working Title: Thera-Hand)
+# Thera-Hand
 
 ## Team Members:
 Jhovanny
