@@ -19,3 +19,6 @@ Updated Need and Goal statements.
 
 Presentation:
 Did Conceptualization, section #2 of slides, Need & Goal statement.
+
+App:
+Working on Full-Stack app.
