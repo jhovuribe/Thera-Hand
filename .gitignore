@@ -1,0 +1,20 @@
+# ESP-IDF build output
+build/
+sdkconfig.old
+Development/Mech/sensors/build/
+
+# VS Code config
+.vscode/
+
+# Python virtual environments
+python_env/
+*.pyc
+__pycache__/
+
+# ESP-IDF logs
+*.log
+
+# Misc
+*.bak
+*.swp
+.DS_Store
