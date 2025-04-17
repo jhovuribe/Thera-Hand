@@ -94,12 +94,13 @@ Worked with Andy to find another hand model, and also ordered metal wiring, will
 \hrule
 
 \section*{2025-04-17}
-We worked on expanding data reading to 5 flex sensors at a time. This was done by replicating the wiring for the flex sensor 5 times over and connecting them to different GPIO pins on the ESP32C3.
+We worked on expanding data reading to 5 flex sensors at a time. This was done by replicating the wiring for the flex sensor 5 times over and connecting them to different GPIO pins on the ESP32C3. We also changed the C script to assign the new GPIO pins into the respective flex sensors and organized output data to display each flex sensor respectively.
 
 We did some testing to make sure each flex sensor was being read correctly based on the bend.
 
 Andy and Ethan worked on getting Smraza mico-servos s51 to run based on the following parameters:
 The wavefrom generator is set to a squarewave 50 Hz, 5 VPP. Power supply is at 4.8V 5 Amps. We figured out that a duty cycle of 12.4 percent is the far right and 2.3 percent is the far left.
+
 
 
 \vspace{1em}
