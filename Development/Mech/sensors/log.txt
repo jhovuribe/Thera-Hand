@@ -1,0 +1,352 @@
+Executing action: flash
+Running ninja in directory /home/alnislam/esp/my_flex_project/build
+Executing "ninja flash"...
+[1/5] cd /home/alnislam/esp/my_flex_project/build/esp-idf/esptool_py && /home/alnislam/.espressif/python_env/idf5.4_py3.10_env/bin/python /home/alnislam/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/alnislam/esp/my_flex_project/build/partition_table/partition-table.bin /home/alnislam/esp/my_flex_project/build/my_flex_project.bin
+my_flex_project.bin binary size 0x2f410 bytes. Smallest app partition is 0x100000 bytes. 0xd0bf0 bytes (82%) free.
+[2/5] Performing build step for 'bootloader'
+[1/1] cd /home/alnislam/esp/my_flex_project/build/bootloader/esp-idf/esptool_py && /home/alnislam/.espressif/python_env/idf5.4_py3.10_env/bin/python /home/alnislam/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x0 /home/alnislam/esp/my_flex_project/build/bootloader/bootloader.bin
+Bootloader binary size 0x53d0 bytes. 0x2c30 bytes (35%) free.
+[2/3] cd /home/alnislam/esp/esp-idf/components/esptool_py && /usr/bin/cmake -D IDF_PATH=/home/alnislam/esp/esp-idf -D "SERIAL_TOOL=/home/alnislam/.espressif/python_env/idf5.4_py3.10_env/bin/python;;/home/alnislam/esp/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32c3" -D "SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args" -D WORKING_DIRECTORY=/home/alnislam/esp/my_flex_project/build -P /home/alnislam/esp/esp-idf/components/esptool_py/run_serial_tool.cmake
+esptool.py --chip esp32c3 -p /dev/ttyACM0 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 2MB 0x0 bootloader/bootloader.bin 0x10000 my_flex_project.bin 0x8000 partition_table/partition-table.bin
+esptool.py v4.8.1
+Serial port /dev/ttyACM0
+Connecting...
+Chip is ESP32-C3 (QFN32) (revision v0.4)
+Features: WiFi, BLE, Embedded Flash 4MB (XMC)
+Crystal is 40MHz
+MAC: 34:85:18:01:b4:24
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00005fff...
+Flash will be erased from 0x00010000 to 0x0003ffff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+SHA digest in image updated
+Compressed 21456 bytes to 13054...
+Writing at 0x00000000... (100 %)
+Wrote 21456 bytes (13054 compressed) at 0x00000000 in 0.4 seconds (effective 472.8 kbit/s)...
+Hash of data verified.
+Compressed 193552 bytes to 101064...
+Writing at 0x00010000... (14 %)
+Writing at 0x0001af93... (28 %)
+Writing at 0x0002135c... (42 %)
+Writing at 0x000282c1... (57 %)
+Writing at 0x0002fb30... (71 %)
+Writing at 0x000364b4... (85 %)
+Writing at 0x0003df80... (100 %)
+Wrote 193552 bytes (101064 compressed) at 0x00010000 in 1.6 seconds (effective 964.4 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 103...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (103 compressed) at 0x00008000 in 0.1 seconds (effective 442.8 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+Executing action: monitor
+Running idf_monitor in directory /home/alnislam/esp/my_flex_project
+Executing "/home/alnislam/.espressif/python_env/idf5.4_py3.10_env/bin/python /home/alnislam/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyACM0 -b 115200 --toolchain-prefix riscv32-esp-elf- --target esp32c3 --revision 3 --decode-panic backtrace /home/alnislam/esp/my_flex_project/build/my_flex_project.elf -m '/home/alnislam/.espressif/python_env/idf5.4_py3.10_env/bin/python' '/home/alnislam/esp/esp-idf/tools/idf.py' '-p' '/dev/ttyACM0'"...
+[0;32mI (264) spi_flash: flash io: ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xc (SPI_FAST_FLASH_BOOT)
+Saved PC:0x4004c0d4
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fcd5820,len:0x1824
+load:0x403cc710,len:0xc30
+load:0x403ce710,len:0x2f20
+entry 0x403cc71a
+[0;32mI (24) boot: ESP-IDF v5.4-dev-3489-g6e5a178b31-dirty 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Apr 16 2025 16:44:11[0m
+[0;32mI (26) boot: chip revision: v0.4[0m
+[0;32mI (29) boot: efuse block revision: v1.2[0m
+[0;32mI (34) boot.esp32c3: SPI Speed      : 80MHz[0m
+[0;32mI (39) boot.esp32c3: SPI Mode       : DIO[0m
+[0;32mI (43) boot.esp32c3: SPI Flash Size : 2MB[0m
+[0;32mI (48) boot: Enabling RNG early entropy source...[0m
+[0;32mI (54) boot: Partition Table:[0m
+[0;32mI (57) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (65) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (72) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (79) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (87) boot: End of partition table[0m
+[0;32mI (91) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=09864h ( 39012) map[0m
+[0;32mI (106) esp_image: segment 1: paddr=0001988c vaddr=3fc8b800 size=01380h (  4992) load[0m
+[0;32mI (109) esp_image: segment 2: paddr=0001ac14 vaddr=40380000 size=05404h ( 21508) load[0m
+[0;32mI (120) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=19130h (102704) map[0m
+[0;32mI (141) esp_image: segment 4: paddr=00039158 vaddr=40385404 size=0626ch ( 25196) load[0m
+[0;32mI (146) esp_image: segment 5: paddr=0003f3cc vaddr=50000200 size=00018h (    24) load[0m
+[0;32mI (150) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (153) boot: Disabling RNG early entropy source...[0m
+[0;32mI (170) cpu_start: Unicore app[0m
+[0;32mI (178) cpu_start: Pro cpu start user code[0m
+[0;32mI (178) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (178) app_init: Application information:[0m
+[0;32mI (181) app_init: Project name:     my_flex_project[0m
+[0;32mI (187) app_init: App version:      1[0m
+[0;32mI (191) app_init: Compile time:     Apr 16 2025 16:43:45[0m
+[0;32mI (197) app_init: ELF file SHA256:  0f4f02bb8...[0m
+[0;32mI (202) app_init: ESP-IDF:          v5.4-dev-3489-g6e5a178b31-dirty[0m
+[0;32mI (209) efuse_init: Min chip rev:     v0.3[0m
+[0;32mI (214) efuse_init: Max chip rev:     v1.99 [0m
+[0;32mI (219) efuse_init: Chip rev:         v0.4[0m
+[0;32mI (224) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (231) heap_init: At 3FC8DA80 len 00032580 (201 KiB): RAM[0m
+[0;32mI (237) heap_init: At 3FCC0000 len 0001C710 (113 KiB): Retention RAM[0m
+[0;32mI (244) heap_init: At 3FCDC710 len 00002950 (10 KiB): Retention RAM[0m
+[0;32mI (251) heap_init: At 50000218 len 00001DD0 (7 KiB): RTCRAM[0m
+[0;32mI (258) spi_flash: detected chip: generic[0m
+[0;32mI (262) spi_flash: flash io: dio[0m
+[0;33mW (266) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;33mW (279) ADC: legacy driver is deprecated, please migrate to `esp_adc/adc_oneshot.h`[0m
+[0;32mI (287) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (295) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (302) main_task: Started on CPU0[0m
+[0;32mI (302) main_task: Calling app_main()[0m
+[0;32mI (302) gpio: GPIO[0]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (1262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (1762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (2262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (2762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (3262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (3762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (4262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (4762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (5262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (5762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (6262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (6762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (7262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (7762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (8262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (8762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (9262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (9762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (10262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (10762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (11262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (11762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (12262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (12762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (13262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (13762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (14262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (14762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (15262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (15762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (16262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (16762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (17262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (17762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (18262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (18762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (19262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (19762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (20262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (20762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (21262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (21762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (22262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (22762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (23262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (23762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (24262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (24762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (25262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (25762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (26262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (26762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (27262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (27762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (28262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (28762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (29262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (29762) FLEX: Avg Voltage: 0.644 V | Flex: 41.4%[0m
+[0;32mI (30262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (30762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (31262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (31762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (32262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (32762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (33262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (33762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (34262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (34762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (35262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (35762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (36262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (36762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (37262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (37762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (38262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (38762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (39262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (39762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (40262) FLEX: Avg Voltage: 0.641 V | Flex: 41.2%[0m
+[0;32mI (40762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (41262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (41762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (42262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (42762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (43262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (43762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (44262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (44762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (45262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (45762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (46262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (46762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (47262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (47762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (48262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (48762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (49262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (49762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (50262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (50762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (51262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (51762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (52262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (52762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (53262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (53762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (54262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (54762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (55262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (55762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (56262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (56762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (57262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (57762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (58262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (58762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (59262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (59762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (60262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (60762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (61262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (61762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (62262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (62762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (63262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (63762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (64262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (64762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (65262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (65762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (66262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (66762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (67262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (67762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (68262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (68762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (69262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (69762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (70262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (70762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (71262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (71762) FLEX: Avg Voltage: 0.641 V | Flex: 41.2%[0m
+[0;32mI (72262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (72762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (73262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (73762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (74262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (74762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (75262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (75762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (76262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (76762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (77262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (77762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (78262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (78762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (79262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (79762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (80262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (80762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (81262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (81762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (82262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (82762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (83262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (83762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (84262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (84762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (85262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (85762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (86262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (86762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (87262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (87762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (88262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (88762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (89262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (89762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (90262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (90762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (91262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (91762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (92262) FLEX: Avg Voltage: 0.641 V | Flex: 41.2%[0m
+[0;32mI (92762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (93262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (93762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (94262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (94762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (95262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (95762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (96262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (96762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (97262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (97762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (98262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (98762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (99262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (99762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (100262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (100762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (101262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (101762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (102262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (102762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (103262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (103762) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (104262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (104762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (105262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (105762) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (106262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (106762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (107262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (107762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (108262) FLEX: Avg Voltage: 0.643 V | Flex: 41.4%[0m
+[0;32mI (108762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (109262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (109762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (110262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (110762) FLEX: Avg Voltage: 0.641 V | Flex: 41.1%[0m
+[0;32mI (111262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (111762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (112262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (112762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (113262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (113762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (114262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (114762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (115262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (115762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (116262) FLEX: Avg Voltage: 0.644 V | Flex: 41.4%[0m
+[0;32mI (116762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (117262) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (117762) FLEX: Avg Voltage: 0.643 V | Flex: 41.3%[0m
+[0;32mI (118262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (118762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (119262) FLEX: Avg Voltage: 0.642 V | Flex: 41.2%[0m
+[0;32mI (119762) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (120262) FLEX: Avg Voltage: 0.642 V | Flex: 41.3%[0m
+[0;32mI (120312) FLEX: Data collection complete. Duration: 120 seconds[0m
+[0;32mI (120312) main_task: Returned from app_main()[0m
+Done
