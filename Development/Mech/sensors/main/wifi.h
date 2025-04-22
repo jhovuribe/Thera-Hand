@@ -1,7 +1,11 @@
-// wifi.h
+#pragma once
 #ifndef WIFI_H
 #define WIFI_H
 
-void wifi_init();
+#include <stdbool.h>
 
-#endif // WIFI_H
+extern bool wifi_connected;
+
+void wifi_init_sta();
+
+#endif

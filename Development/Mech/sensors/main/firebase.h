@@ -1,8 +1,12 @@
-// firebase.h
 #ifndef FIREBASE_H
 #define FIREBASE_H
 
-void upload_rep_header(const char *rep_id, const char *timestamp);
-void upload_flex_reading(const char *rep_id, int counter, float flex);
+#include <stdbool.h>
 
-#endif // FIREBASE_H
+extern bool wifi_connected;
+
+extern char session_id[32];
+
+void send_data_to_firebase(float voltage, float flex_percent, const char *timestamp);
+
+#endif
