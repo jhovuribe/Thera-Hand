@@ -1,16 +1,19 @@
-
 \documentclass[12pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 
+
+\setlength{\headheight}{15.0pt}
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{Thera-Hand Project}
 \rfoot{\thepage}
 
+
 \titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
 \begin{document}
+
 
 \begin{center}
     {\Huge\bfseries Mech Log}
@@ -19,12 +22,15 @@
 \hrule
 \vspace{1em}
 
+
 \section*{Instructions}
 To make a new log entry, copy and paste the block below:
+
 
 \begin{verbatim}
 \section*{YYYY-MM-DD}
 [Write a description of what was done. Be concise but specific.]
+
 
 \vspace{1em}
 \noindent\textit{Contributor: Your Name}
@@ -32,14 +38,114 @@ To make a new log entry, copy and paste the block below:
 \hrule
 \end{verbatim}
 
+
 \vspace{1em}
 \hrule
 \vspace{1em}
 
+
 % Example log entries below
+
+
+\section*{2025-04-10}
+Typed meeting notes from the meeting with the professor and shared it with the group. Added to the bill of materials and shared it with the professor. Discussed goals with the mech team such as finalizing the design and made issues for them.
+
+
+Found new hand model that would be more flexible than the current wooden one. The current wooden one is too stiff and would not work well for testing the device.
+Looked for different servo motors with Ethan and Andy. Goal was to look for one with more power that would be able to move a finger since the current one is too weak.
+
+
+\vspace{1em}
+\noindent\textit{Contributor: Aliyaa Islam}
+\vspace{1em}
+
+
+Attended meeting with professor. Worked on bill of materials with Aliyaa and Andy. Worked on acquiring bill of materials from lab and theorizing most needed parts. Compared and found usable servos, along with the best hand models needed. Found that rigid hand models will be more realistic and better for a prototype the a completely elastic hand model.
+
+
+In actual therapy hands may be really rigid and thus a higher power and 360 degree servo may be needed and was chosen. A duplicate servo was chosen that was even higher power but harder to use was also chosen.
+
+
+Organized the mechanical group with Ethan, Aliyaa and Andy. Set milestones that needed to be achieved which were displayed in issues.
+
+
+\vspace{1em}
+\noindent\textit{Contributor: Ethan Cesario}
+\vspace{1em}
+\hrule
+
+
+% Add new entries below this line
+
+
+\section*{2025-04-15}
+Worked on flex sensor data reading in terminal. Figured out how to connect esp32c3 micro controller to laptop.
+
+
+
+
+\vspace{1em}
+\noindent\textit{Contributor: Andy Vo}
+\vspace{1em}
+
+
+Worked with Aliyaa and Andy on connecting the flex sensor to a usable computer. Built a basic resistor divider to convert the resistance read off of the flex sensor to be able to read voltage. Worked with Aliyaa and Andy to make a basic C script which was loaded onto the ESP32C3 to read flex sensor data. Worked with group members to find the best time for the tutor. Strategized more deadlines needed for mechanical side of project.
+
+
+Worked with Akash to assign basic CAD milestones along with theorizing specific servo placements.
+
+
+\vspace{1em}
+\noindent\textit{Contributor: Ethan Cesario}
+\vspace{1em}
+
+
+\hrule
+
+
+\section*{2025-04-16}
+We worked on fixing flex sensor data by making the program output 10x as fast as before. Also set the range of the flex sensor detection to 0-100 degrees. We set it to where below 40 degrees is when the flex sensor is bent backwards. Anything above 40 is forward contratction of the finger. We plan to find how accurate our numbers are later.
+
+
+We set the program to stop at 2 min as estimation for how long 1 exercise cycle would take. We then tracked the flex sensor data and logged the data into a file called log.txt. Fixed outliers with data recorded while also recording a much larger data set and averaging them out.
+
+
+Added Akash onto the mechanical group. Assigned more work to Akash and worked on CAD model for individual finger with Akash. Including drawings.
+Added more parts to bill of materials including glue types, added multiple glove types. One being rigid and the other being more flexible. Decided to go with glove design due to connectivity issues occurring with flex sensor.
+
+
+Worked with Andy to find another hand model, and also ordered metal wiring, will be used to compare against ability to fishing wire.
+\vspace{1em}
+\noindent\textit{Contributor: Andy Vo, Aliyaa Islam, Ethan Cesario}
+\vspace{1em}
+\hrule
+
+
+\section*{2025-04-17}
+We worked on expanding data reading to 5 flex sensors at a time. This was done by replicating the wiring for the flex sensor 5 times over and connecting them to different GPIO pins on the ESP32C3. We also changed the C script to assign the new GPIO pins into the respective flex sensors and organized output data to display each flex sensor respectively. Got LEDs to help with debugging with output detection. We also plan to use LEDs to test turning the device on and off.
+
+
+We did some testing to make sure each flex sensor was being read correctly based on the bend.
+
+
+Andy and Ethan worked on getting Smraza mico-servos s51 to run based on the following parameters:
+The waveform generator is set to a squarewave 50 Hz, 5 VPP. Power supply is at 4.8V 5 Amps. We figured out that a duty cycle of 12.4 percent is the far right and 2.3 percent is the far left.
+
+
+
+
+
+
+\vspace{1em}
+\noindent\textit{Contributor: Andy Vo, Aliyaa Islam, Ethan Cesario}
+\vspace{1em}
+\hrule
+
 
 \section*{2025-04-17}
 Found command to be able to save data into a text document for every run. Edited code so that it runs for 2 minutes (theoretical run time for exercises).
+
+
 
 
 \vspace{1em}
@@ -47,14 +153,15 @@ Found command to be able to save data into a text document for every run. Edited
 \vspace{1em}
 \hrule
 
-\section*{2025-04-11}
-Reinforced pulley base with PLA bracket. Investigated elastic tensioning for tendon return—experimented with 3 types of bands and logged tension results.
+\section*{2025-04-22}
+
+
+
 
 \vspace{1em}
-\noindent\textit{Contributor: Jane Smith}
+\noindent\textit{Contributor: }
 \vspace{1em}
 \hrule
 
-% Add new entries below this line
 
 \end{document}
