@@ -1,6 +1,7 @@
 // offline_storage.c
 #include "offline_storage.h"
 #include "esp_littlefs.h"
+esp_vfs_littlefs_register(&conf);
 #include "esp_log.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +17,7 @@ static int buffer_len = 0;
 void init_spiffs() {
     esp_vfs_littlefs_conf_t conf = {
         .base_path = "/spiffs",
-        .partition_label = NULL,
+        .partition_label = "storage",
         .format_if_mount_failed = true,
         .dont_mount = false,
     };

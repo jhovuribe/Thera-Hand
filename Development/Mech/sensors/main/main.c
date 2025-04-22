@@ -7,7 +7,7 @@
 #include <math.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "driver/adc.h"
+#include "esp_adc/adc_oneshot.h"
 #include "esp_log.h"
 
 #define FLEX_CHANNEL ADC_CHANNEL_0
@@ -20,10 +20,10 @@
 extern bool wifi_connected;
 
 void app_main(void) {
-    nvs_flash_init();
-    wifi_init();
-    init_spiffs();
-    sync_time();
+    nvs_flash_init(); // Initialize NVS (non-volatile server) for WiFi credentials
+    wifi_init(); // Initialize WiFi
+    init_spiffs(); // Initialize SPIFFS for offline storage
+    sync_time(); // Synchronize time with NTP server (timestamping)
 
     if (wifi_connected) {
         check_and_sync_offline_data();
