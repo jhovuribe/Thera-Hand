@@ -7,4 +7,4 @@ idf_component_register(SRCS
 )
 
 # This must come AFTER idf_component_register
-target_add_binary_data(${COMPONENT_LIB} "firebase_cert.pem" TEXT)
+target_add_binary_data(${COMPONENT_LIB} "firebase_cert.pem.txt" TEXT)

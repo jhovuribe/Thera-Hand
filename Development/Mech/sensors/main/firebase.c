@@ -9,8 +9,9 @@
 #define FIREBASE_API_KEY "AIzaSyCZsGIY0DhOQ5qzWyINa0hWMYYed43P7pw"
 #define FIREBASE_PROJECT_ID "thera-hand"
 
-extern const uint8_t _binary_firebase_cert_pem_start[] asm("_binary_firebase_cert_pem_start");
-extern const uint8_t _binary_firebase_cert_pem_end[] asm("_binary_firebase_cert_pem_end");
+extern const uint8_t _binary_firebase_cert_pem_txt_start[] asm("_binary_firebase_cert_pem_txt_start");
+extern const uint8_t _binary_firebase_cert_pem_txt_end[] asm("_binary_firebase_cert_pem_txt_end");
+
 
 
 extern char session_id[32];
@@ -52,8 +53,8 @@ void send_data_to_firestore(float *voltage_array, float *flex_array, int length)
     esp_http_client_config_t config = {
     .url = post_url,
     .method = HTTP_METHOD_PUT,
-    .cert_pem = (const char *)_binary_firebase_cert_pem_start,
-    //.cert_len = _binary_firebase_cert_pem_end - _binary_firebase_cert_pem_start,
+    .cert_pem = (const char *)_binary_firebase_cert_pem_txt_start,
+    //.cert_len = _binary_firebase_cert_pem_txt_end - _binary_firebase_cert_pem_txt_start,
     .timeout_ms = 8000,
     .transport_type = HTTP_TRANSPORT_OVER_SSL,
     };
@@ -65,7 +66,7 @@ void send_data_to_firestore(float *voltage_array, float *flex_array, int length)
 
     esp_err_t err = esp_http_client_perform(client);
     int status = esp_http_client_get_status_code(client);
-    ESP_LOGI(TAG, "Cert snippet: %.64s", _binary_firebase_cert_pem_start);
+    ESP_LOGI(TAG, "Cert snippet: %.64s", _binary_firebase_cert_pem_txt_start);
 
     ESP_LOGI(TAG, "HTTP Status = %d", status);
 
