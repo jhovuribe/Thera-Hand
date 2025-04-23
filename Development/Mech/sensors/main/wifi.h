@@ -1,4 +1,3 @@
-#pragma once
 #ifndef WIFI_H
 #define WIFI_H
 
@@ -6,6 +5,6 @@
 
 extern bool wifi_connected;
 
-void wifi_init_sta();
+void wifi_init_sta(void);
 
 #endif
