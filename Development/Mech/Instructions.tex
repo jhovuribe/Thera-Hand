@@ -142,5 +142,20 @@ Two Smraza Micro Servo S51 motors are connected to the ESP32-C3:
     \label{fig:circuit}
 \end{figure}
 
+\section{Functional Testing and Calibration}
+
+After wiring the ESP32-C3 with the flex sensors and servos as described in the previous section, functionality can be verified using two test scripts: one for the flex sensors and another for servo motion.
+
+\subsection{Flex Sensor Data Capture}
+
+A Python or C-based script is used to read the analog values from the ESP32-C3's ADC pins. These values are mapped linearly to a range of 0 to 100. Based on empirical testing, flex sensor states are interpreted as follows:
+
+\begin{itemize}
+    \item Values $\leq 40$: Sensor is bent \textbf{backwards}
+    \item Values $> 40$: Sensor is bent \textbf{forwards}
+\end{itemize}
+
+These thresholds can be fine-tuned per sensor using calibration profiles stored in software.
+
 
 \end{document}
