@@ -157,5 +157,21 @@ A Python or C-based script is used to read the analog values from the ESP32-C3's
 
 These thresholds can be fine-tuned per sensor using calibration profiles stored in software.
 
+\subsection{Servo Function Testing}
+
+A separate script drives the two Smraza Micro Servo S51 motors through their full range of motion for two minutes. The test parameters are as follows:
+
+\begin{itemize}
+    \item \textbf{Waveform Generator:} Squarewave, 50~Hz frequency, 5~V\textsubscript{PP} (peak-to-peak)
+    \item \textbf{Power Supply:} 4.8~V, 5~A
+    \item \textbf{PWM Duty Cycle Calibration:}
+    \begin{itemize}
+        \item \textbf{2.3\% duty cycle:} Servo rotates fully to the \textbf{left}
+        \item \textbf{12.4\% duty cycle:} Servo rotates fully to the \textbf{right}
+    \end{itemize}
+\end{itemize}
+
+These values are used to validate the full operational range of the servo motors and ensure consistent response to PWM control signals.
+
 
 \end{document}
