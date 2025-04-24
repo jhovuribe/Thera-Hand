@@ -1,4 +1,5 @@
 \documentclass[conference]{IEEEtran}
+\usepackage{graphicx}
 \usepackage{url}
 \usepackage{listings}
 \usepackage{color}
@@ -97,5 +98,49 @@ Replace \texttt{[PORT]} with the detected port name.
     \item Use a data-capable USB cable.
     \item If the board does not respond, reset it using the \texttt{EN} button and retry.
 \end{itemize}
+
+\section{Wiring Instructions for Flex Sensors and Servos}
+
+This section explains how to wire five flex sensors and two Smraza Micro Servo S51 motors to the ESP32-C3 using a breadboard. Refer to Fig.~\ref{fig:circuit} for a visual representation.
+
+\subsection{Flex Sensor Connections}
+
+Each of the five flex sensors is connected in a voltage divider configuration using a 10~k$\Omega$ pull-down resistor. The resulting analog voltage can be read by the ESP32-C3.
+
+\begin{itemize}
+    \item One end of each flex sensor connects to the 3.3~V power rail.
+    \item The other end of each sensor connects to a GPIO pin and a 10~k$\Omega$ resistor.
+    \item Each 10~k$\Omega$ resistor is connected to ground (GND).
+    \item The junction between the sensor and resistor is connected to the ESP32-C3 ADC input pins as follows:
+    \begin{itemize}
+        \item Sensor 0 $\rightarrow$ GPIO0
+        \item Sensor 1 $\rightarrow$ GPIO1
+        \item Sensor 2 $\rightarrow$ GPIO2
+        \item Sensor 3 $\rightarrow$ GPIO3
+        \item Sensor 4 $\rightarrow$ GPIO4
+    \end{itemize}
+\end{itemize}
+
+\subsection{Servo Motor Connections}
+
+Two Smraza Micro Servo S51 motors are connected to the ESP32-C3:
+
+\begin{itemize}
+    \item \textbf{Power:} Connect the red (V\textsubscript{CC}) wire of each servo to the 5~V power rail.
+    \item \textbf{Ground:} Connect the brown/black (GND) wire of each servo to the ground rail.
+    \item \textbf{Signal:} Connect the yellow/white signal wires to the GPIO pins:
+    \begin{itemize}
+        \item Servo 0 $\rightarrow$ GPIO5
+        \item Servo 1 $\rightarrow$ GPIO7
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.45\textwidth]{proto1.jpeg}
+    \caption{Circuit diagram showing ESP32-C3 wiring with 5 flex sensors and 2 Smraza Micro Servo S51 motors.}
+    \label{fig:circuit}
+\end{figure}
+
 
 \end{document}
