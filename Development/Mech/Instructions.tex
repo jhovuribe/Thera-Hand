@@ -32,5 +32,29 @@ This section describes how to configure the ESP32-C3 development board for use o
 \subsubsection{Python}
 Download and install Python from \url{https://www.python.org/downloads/}. During installation, ensure the option to add Python to the system PATH is selected.
 
+\subsubsection{Git}
+Download Git from \url{https://git-scm.com/} and complete the installation using default settings.
+
+\subsection{ESP-IDF Installation}
+
+To install the official Espressif IoT Development Framework (ESP-IDF), execute the following commands:
+
+\begin{lstlisting}
+git clone --recursive https://github.com/espressif/esp-idf.git
+cd esp-idf
+\end{lstlisting}
+
+Then run the install script:
+
+\begin{itemize}
+    \item Linux/macOS:
+    \begin{lstlisting}
+    ./install.sh
+    \end{lstlisting}
+    \item Windows:
+    \begin{lstlisting}
+    install.bat
+    \end{lstlisting}
+\end{itemize}
 
 \end{document}
