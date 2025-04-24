@@ -76,4 +76,26 @@ Before building or flashing firmware, set up the environment as follows:
 
 Connect the ESP32-C3 board to the computer via USB. Identify the correct serial port:
 
+\begin{itemize}
+    \item Linux/macOS: \texttt{ls /dev/ttyUSB*} or \texttt{ls /dev/cu.*}
+    \item Windows: Use Device Manager to find the COM port
+\end{itemize}
+
+Build and flash a project using:
+
+\begin{lstlisting}
+idf.py build
+idf.py -p [PORT] flash
+idf.py -p [PORT] monitor
+\end{lstlisting}
+
+Replace \texttt{[PORT]} with the detected port name.
+
+\subsection{Troubleshooting}
+\begin{itemize}
+    \item Ensure drivers for USB-to-UART chips (e.g., CP210x, CH340) are installed.
+    \item Use a data-capable USB cable.
+    \item If the board does not respond, reset it using the \texttt{EN} button and retry.
+\end{itemize}
+
 \end{document}
