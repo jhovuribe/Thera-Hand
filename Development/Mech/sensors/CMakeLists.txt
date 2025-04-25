@@ -7,4 +7,6 @@ set(EXTRA_COMPONENT_DIRS main)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(sensors)
 
+set(EXTRA_COMPONENT_DIRS components)
+
 
