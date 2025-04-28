@@ -17,7 +17,10 @@
     "react-router-dom": "*",
     "date-fns": "*",
     "material-ui-popup-state": "*",
-    "react-datepicker": "*"
+    "react-datepicker": "*",
+    "three": "*",
+    "@react-three/fiber": "*",
+    "@react-three/drei": "*"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "*",
