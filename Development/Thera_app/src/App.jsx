@@ -42,6 +42,7 @@ import './App.css';
 import { Canvas } from "@react-three/fiber";
 import { HandModel } from "./HandModel";
 import { OrbitControls } from "@react-three/drei";
+
 const drawerWidth = 240;
 
 /**
@@ -52,6 +53,7 @@ const drawerWidth = 240;
 
 
 function App() {
+  const [isClosed, setIsClosed] = React.useState(false);
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const theme = useTheme();
@@ -502,24 +504,21 @@ function App() {
             </Grid>
           </Grid>
         </Box>
-        {/*<Box
+        <Button variant="contained" color="warning"
           sx={{
-            position: 'absolute',
-            bottom: 20,
-            right: 20,
-            top: 250,
-            width: isMobile ? '100%' : `calc(100% - ${1.5025 * drawerWidth}px)`,
-            height: '65%',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
+            position: 'fixed',
+            bottom: 5,
+            right: 10,
+            zIndex: 2000,
           }}
+          onClick={() => setIsClosed((prev) => !prev)}
         >
-          <FrontHandIcon sx={{ width: '100%', height: '100%' }} />
-        </Box>*/}
+          {isClosed ? "Open Hand" : "Close Hand"}
+        </Button>
         <Box sx={{
+          pointerEvents: 'none',
           position: 'absolute',
-          bottom: 0,
+          bottom: 30,
           right: 0,
           top: 270,
           width: isMobile ? '100%' : `calc(100% - ${1.5025 * drawerWidth}px)`,
@@ -531,7 +530,7 @@ function App() {
           <Canvas camera={{ position: [0, 0, 5] }}>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            <HandModel />
+            <HandModel isClosed={isClosed} />
             <OrbitControls />
           </Canvas>
         </Box>
