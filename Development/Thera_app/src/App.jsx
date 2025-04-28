@@ -174,7 +174,7 @@ function App() {
       <PopupState variant="popover" popupId="demo-popup-menu">
       {(popupState) => (
         <React.Fragment>
-          <Button variant="contained" color="warning" {...bindTrigger(popupState)} sx={{position: 'fixed', top: 112, left: 0,
+          <Button variant="contained" color="warning" {...bindTrigger(popupState)} sx={{position: 'fixed', top: 119, left: 0,
             width: `calc(${1.5025*drawerWidth}px)`}}>
             <Typography variant="overline">Select a finger ...</Typography>
           </Button>
@@ -260,13 +260,18 @@ function App() {
       
       
       
-      <Box sx={{
-        position: 'fixed',
+      <Box       
+        sx={{
+        width: `calc(${1.5025*drawerWidth}px)`,
         bottom: 0,
         left: 0,
-        width: `calc(${1.5025*drawerWidth}px)`,
-        //overflow: 'auto',
-        '& ul': { padding: 0 },}}>
+        top: 449,
+        bgcolor: 'background.paper',
+        position: 'fixed',
+        // overflow: 'auto',
+        '& ul': { padding: 0 },
+      }}
+      subheader={<li />}>
       <TableContainer component={Paper}>
       <Table sx={{ minWidth: `calc(${1.5025*drawerWidth}px)`}} aria-label="customized table">
         <TableHead>
@@ -296,8 +301,8 @@ function App() {
     <List
       sx={{
         width: `calc(${1.5025*drawerWidth}px)`,
-        bottom: 321,
-        height: 275,
+        top: 199,
+        height: 250,
         left: 0,
         bgcolor: 'background.paper',
         position: 'fixed',
@@ -325,7 +330,7 @@ function App() {
       <PopupState variant="popover" popupId="demo-popup-menu">
       {(popupState) => (
         <React.Fragment>
-          <Button variant="contained" color="warning" {...bindTrigger(popupState)} sx={{position: 'fixed', top: 112, left: 0,
+          <Button variant="contained" color="warning" {...bindTrigger(popupState)} sx={{position: 'fixed', top: 119, left: 0,
             width: `calc(${1.5025*drawerWidth}px)`}}>
             <Typography variant="overline">Select an Exercise ...</Typography>
           </Button>
@@ -339,13 +344,18 @@ function App() {
         </React.Fragment>
       )}
     </PopupState>
-    <Box sx={{
-        position: 'fixed',
+    <Box
+        sx={{
+        width: `calc(${1.5025*drawerWidth}px)`,
         bottom: 0,
         left: 0,
-        width: `calc(${1.5025*drawerWidth}px)`,
-        //overflow: 'auto',
-        '& ul': { padding: 0 },}}>
+        top: 449,
+        bgcolor: 'background.paper',
+        position: 'fixed',
+        // overflow: 'auto',
+        '& ul': { padding: 0 },
+      }}
+      subheader={<li />}>
       <TableContainer component={Paper}>
       <Table sx={{ minWidth: `calc(${1.5025*drawerWidth}px)`}} aria-label="customized table">
         <TableHead>
