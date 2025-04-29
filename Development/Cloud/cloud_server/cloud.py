@@ -1,36 +1,32 @@
 from flask import Flask, request, jsonify
 import os, json
-import time
+from datetime import datetime
 
 app = Flask(__name__)
 BASE_DIR = "./cloud_storage"
-API_KEY = "API_cred"  # <-- Add your API key here
 
-@app.route('/upload/<user>/<timestamp>', methods=['POST'])
-def upload(user, timestamp):
-    # 1. Check for API Key
-    api_key = request.headers.get('x-api-key')
-    if api_key != API_KEY:
-        return jsonify({"error": "Unauthorized"}), 401
-
-    # 2. Save the data
+@app.route('/upload/<user>', methods=['POST'])
+def upload(user):
     data = request.get_json()
-    path = os.path.join(BASE_DIR, user)
-    os.makedirs(path, exist_ok=True)
 
-    file_path = os.path.join(path, f"{timestamp}.json")
-    with open(file_path, "w") as f:
+    # Generate readable timestamp for filename
+    timestamp = datetime.now().strftime("%d-%b-%Y_%H-%M-%S")  # e.g., 24-Apr-2025_17-30-39
+    user_dir = os.path.join(BASE_DIR, user)
+    os.makedirs(user_dir, exist_ok=True)
+
+    filepath = os.path.join(user_dir, f"{timestamp}.json")
+    with open(filepath, "w") as f:
         json.dump(data, f)
 
-    return jsonify({"message": "Upload complete"})
+    return jsonify({"message": f"Upload saved as {timestamp}.json"})
 
-@app.route('/download/<user>/<timestamp>', methods=['GET'])
-def download(user, timestamp):
-    path = os.path.join(BASE_DIR, user, f"{timestamp}.json")
-    if not os.path.exists(path):
-        return jsonify({"error": "Not found"}), 404
+@app.route('/download/<user>/<filename>', methods=['GET'])
+def download(user, filename):
+    filepath = os.path.join(BASE_DIR, user, f"{filename}.json")
+    if not os.path.exists(filepath):
+        return jsonify({"error": "Session not found"}), 404
 
-    with open(path, "r") as f:
+    with open(filepath, "r") as f:
         return jsonify(json.load(f))
 
 if __name__ == "__main__":

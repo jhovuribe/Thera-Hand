@@ -18,7 +18,6 @@
 #define WIFI_SSID "Jho"
 #define WIFI_PASS "12345678"
 #define CLIENT_ID "jhovanny"
-#define API_KEY "API_cred"   // <-- Added API Key
 
 #define FLEX_CHANNEL ADC_CHANNEL_0
 #define FLEX_WIDTH ADC_WIDTH_BIT_12
@@ -79,9 +78,9 @@ static void send_data_to_server(void) {
     cJSON_AddItemToObject(root, "voltages", voltages);
     cJSON_AddItemToObject(root, "flex_percent", flexes);
 
-    char url[256];
+    char url[128];
     snprintf(url, sizeof(url),
-        "http://192.168.137.181:5000/upload/%s/%s", CLIENT_ID, timestamp);
+    "http://192.168.137.181:5000/upload/%s", CLIENT_ID);
 
     char *post_data = cJSON_Print(root);
     ESP_LOGI("HTTP", "Posting to: %s\n%s", url, post_data);
@@ -93,7 +92,6 @@ static void send_data_to_server(void) {
 
     esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_http_client_set_header(client, "Content-Type", "application/json");
-    esp_http_client_set_header(client, "x-api-key", API_KEY);    // <-- Add API key in header
     esp_http_client_set_post_field(client, post_data, strlen(post_data));
     esp_err_t err = esp_http_client_perform(client);
 
@@ -101,6 +99,7 @@ static void send_data_to_server(void) {
         ESP_LOGI("HTTP", "Status = %d, content_length = %" PRId64,
             esp_http_client_get_status_code(client),
             (int64_t)esp_http_client_get_content_length(client));
+   
     } else {
         ESP_LOGE("HTTP", "HTTP POST failed: %s", esp_err_to_name(err));
     }
