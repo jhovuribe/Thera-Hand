@@ -7,9 +7,9 @@ DELETE FROM users;
 
 -- Insert users (patients)
 INSERT INTO users (role, data) VALUES
-  ('patient', '{"email": "aliyaa@therahand.com","password": "$2b$10$Y00XOZD/f5gBSpDusPUgU.iJufk6Nxx6gAoHRG8t2eHyGgoP2bK4y","name": "Aliyaa"}'),
-  ('patient', '{"email": "ethan@therahand.com","password": "$2b$10$Y00XOZD/f5gBSpDusPUgU.G1ohpR3oQbbBHK4KzX7dU219Pv/lzze","name": "Ethan"}'),
-  ('patient', '{"email": "jhovanny@therahand.com","password": "$2b$10$jlxbNK.iahL/ZSPBEevShOkps4ZfCm/83/.J3gIfIbC/9gZOM7pIK","name": "Jhovanny"}'),
+  ('patient', '{"email": "aliyaa@therahand.com","password": "$2b$10$nWqp5DEYMSYu19RPiSUw/eVzmX4n2LFjwebz6k3/NqIEFO1GoQisW","name": "Aliyaa"}'),
+  ('patient', '{"email": "ethan@therahand.com","password": "$2b$10$r6UlTChvWYWrYqzzYzOf4uB50iiXuTWU//WbDmy8zCfZ36Kl2qPLy","name": "Ethan"}'),
+  ('patient', '{"email": "jhovanny@therahand.com","password": "$2b$10$4NMy.B8/rmGdvm5j1EDlQemP.c9fQDW8NWTaCZE9ViXr07.inJcvO","name": "Jhovanny"}'),
   ('patient', '{"email": "a@abc.com","password": "$2b$10$M11TSOnb7LQGSAElX7HAo.g/upzTbAp5U5A9hUMK9KTxj07JUzzau","name": "User A"}');
 
 -- Promote those users to patients
