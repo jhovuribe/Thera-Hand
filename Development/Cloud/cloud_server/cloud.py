@@ -7,6 +7,7 @@ BASE_DIR = "./cloud_storage"
 
 API_KEYS = {
     "jhovanny": "THERAjhov_cred_2025",
+    "ethan": "THERAethan_cred_2025",
 }
 
 @app.route('/upload/<user>/<timestamp>', methods=['POST'])

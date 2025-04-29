@@ -18,8 +18,8 @@
 
 #define WIFI_SSID "Jho"
 #define WIFI_PASS "12345678"
-#define CLIENT_ID "jhovanny"
-#define API_KEY   "THERAjhov_cred_2025"
+#define CLIENT_ID "ethan"
+#define API_KEY   "THERAethan_cred_2025"
 #define SERVER_URL "http://ec2-3-129-247-77.us-east-2.compute.amazonaws.com:5000" 
 //public DNS name for 1. Reliable routing & DNS resolution and 2. Avoids potental AWS-side restrictions for direct IP access
 
