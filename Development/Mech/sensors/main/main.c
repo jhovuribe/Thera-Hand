@@ -18,7 +18,7 @@
 #define WIFI_SSID "Jho"
 #define WIFI_PASS "12345678"
 #define CLIENT_ID "jhovanny"
-#define API_KEY   "abc123xyz"
+#define API_KEY   "THERAjhov_cred_2025"
 #define SERVER_URL "http://3.129.247.77:5000"
 
 #define FLEX_CHANNEL ADC_CHANNEL_0
