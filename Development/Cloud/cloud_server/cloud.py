@@ -1,25 +1,35 @@
 from flask import Flask, request, jsonify
 import os, json
-import socket
 import time
+import socket
+from datetime import datetime
 
 app = Flask(__name__)
 BASE_DIR = "./cloud_storage"
 
-@app.route('/upload/<user>/<session>', methods=['POST'])
-def upload(user, session):
+@app.route('/upload/<user>/<timestamp>', methods=['POST'])
+def upload(user, timestamp):
     data = request.get_json()
-    user_path = os.path.join(BASE_DIR, user)
-    os.makedirs(user_path, exist_ok=True)
-    file_path = os.path.join(user_path, f"Session_{session}.json")
-    with open(file_path, "w") as f:
+
+    # Convert UNIX timestamp (string) to formatted datetime
+    try:
+        ts = int(timestamp)
+        session_time = datetime.fromtimestamp(ts).strftime("Session_%m-%d-%Y_%H-%M-%S")
+    except Exception as e:
+        return jsonify({"error": "Invalid timestamp"}), 400
+
+    user_dir = os.path.join(BASE_DIR, user)
+    os.makedirs(user_dir, exist_ok=True)
+
+    filepath = os.path.join(user_dir, f"{session_time}.json")
+    with open(filepath, "w") as f:
         json.dump(data, f)
-    return jsonify({"message": "Upload complete"})
 
+    return jsonify({"message": "Upload complete", "file": filepath})
 
-@app.route('/download/<user>/<folder>', methods=['GET'])
-def download(user, folder):
-    path = os.path.join(BASE_DIR, user, folder, "data.json")
+@app.route('/download/<user>/<filename>', methods=['GET'])
+def download(user, filename):
+    path = os.path.join(BASE_DIR, user, filename)
     if not os.path.exists(path):
         return jsonify({"error": "Not found"}), 404
     with open(path, "r") as f:
@@ -37,6 +47,6 @@ if __name__ == "__main__":
     while not check_network_connection():
         print("[Cloud Server] Wi-Fi not available. Retrying in 5 seconds...")
         time.sleep(5)
-    
+
     print("[Cloud Server] Wi-Fi connected! Starting Flask server...")
     app.run(host="0.0.0.0", port=5000)

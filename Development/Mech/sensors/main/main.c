@@ -80,9 +80,7 @@ static void send_data_to_server(void) {
 
     char url[256];
     snprintf(url, sizeof(url),
-    "http://192.168.137.181:5000/upload/%s/%s", CLIENT_ID, timestamp);
-
-    ESP_LOGI("HTTP", "URL: %s", url);
+        "http://192.168.137.181:5000/upload/%s/%s", CLIENT_ID, timestamp);
 
     char *post_data = cJSON_Print(root);
     ESP_LOGI("HTTP", "Posting to: %s\n%s", url, post_data);
@@ -101,7 +99,6 @@ static void send_data_to_server(void) {
         ESP_LOGI("HTTP", "Status = %d, content_length = %" PRId64,
             esp_http_client_get_status_code(client),
             (int64_t)esp_http_client_get_content_length(client));
-   
     } else {
         ESP_LOGE("HTTP", "HTTP POST failed: %s", esp_err_to_name(err));
     }
