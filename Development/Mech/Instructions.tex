@@ -1,0 +1,177 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegray}{gray}{0.95}
+\lstset{
+  backgroundcolor=\color{codegray},
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  columns=fullflexible
+}
+
+\begin{document}
+
+\section{ESP32-C3 Setup Instructions}
+
+This section describes how to configure the ESP32-C3 development board for use on a personal computer.
+
+\subsection{Requirements}
+\begin{itemize}
+    \item ESP32-C3 development board
+    \item USB-C cable
+    \item Internet-enabled computer (Windows, Linux, or macOS)
+    \item Git
+    \item Python 3.7 or later
+\end{itemize}
+
+\subsection{Installation of Prerequisites}
+
+\subsubsection{Python}
+Download and install Python from \url{https://www.python.org/downloads/}. During installation, ensure the option to add Python to the system PATH is selected.
+
+\subsubsection{Git}
+Download Git from \url{https://git-scm.com/} and complete the installation using default settings.
+
+\subsection{ESP-IDF Installation}
+
+To install the official Espressif IoT Development Framework (ESP-IDF), execute the following commands:
+
+\begin{lstlisting}
+git clone --recursive https://github.com/espressif/esp-idf.git
+cd esp-idf
+\end{lstlisting}
+
+Then run the install script:
+
+\begin{itemize}
+    \item Linux/macOS:
+    \begin{lstlisting}
+    ./install.sh
+    \end{lstlisting}
+    \item Windows:
+    \begin{lstlisting}
+    install.bat
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{Environment Setup}
+
+Before building or flashing firmware, set up the environment as follows:
+
+\begin{itemize}
+    \item Linux/macOS:
+    \begin{lstlisting}
+    . ./export.sh
+    \end{lstlisting}
+    \item Windows:
+    \begin{lstlisting}
+    export.bat
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{Flashing and Testing}
+
+Connect the ESP32-C3 board to the computer via USB. Identify the correct serial port:
+
+\begin{itemize}
+    \item Linux/macOS: \texttt{ls /dev/ttyUSB*} or \texttt{ls /dev/cu.*}
+    \item Windows: Use Device Manager to find the COM port
+\end{itemize}
+
+Build and flash a project using:
+
+\begin{lstlisting}
+idf.py build
+idf.py -p [PORT] flash
+idf.py -p [PORT] monitor
+\end{lstlisting}
+
+Replace \texttt{[PORT]} with the detected port name.
+
+\subsection{Troubleshooting}
+\begin{itemize}
+    \item Ensure drivers for USB-to-UART chips (e.g., CP210x, CH340) are installed.
+    \item Use a data-capable USB cable.
+    \item If the board does not respond, reset it using the \texttt{EN} button and retry.
+\end{itemize}
+
+\section{Wiring Instructions for Flex Sensors and Servos}
+
+This section explains how to wire five flex sensors and two Smraza Micro Servo S51 motors to the ESP32-C3 using a breadboard. Refer to Fig.~\ref{fig:circuit} for a visual representation.
+
+\subsection{Flex Sensor Connections}
+
+Each of the five flex sensors is connected in a voltage divider configuration using a 10~k$\Omega$ pull-down resistor. The resulting analog voltage can be read by the ESP32-C3.
+
+\begin{itemize}
+    \item One end of each flex sensor connects to the 3.3~V power rail.
+    \item The other end of each sensor connects to a GPIO pin and a 10~k$\Omega$ resistor.
+    \item Each 10~k$\Omega$ resistor is connected to ground (GND).
+    \item The junction between the sensor and resistor is connected to the ESP32-C3 ADC input pins as follows:
+    \begin{itemize}
+        \item Sensor 0 $\rightarrow$ GPIO0
+        \item Sensor 1 $\rightarrow$ GPIO1
+        \item Sensor 2 $\rightarrow$ GPIO2
+        \item Sensor 3 $\rightarrow$ GPIO3
+        \item Sensor 4 $\rightarrow$ GPIO4
+    \end{itemize}
+\end{itemize}
+
+\subsection{Servo Motor Connections}
+
+Two Smraza Micro Servo S51 motors are connected to the ESP32-C3:
+
+\begin{itemize}
+    \item \textbf{Power:} Connect the red (V\textsubscript{CC}) wire of each servo to the 5~V power rail.
+    \item \textbf{Ground:} Connect the brown/black (GND) wire of each servo to the ground rail.
+    \item \textbf{Signal:} Connect the yellow/white signal wires to the GPIO pins:
+    \begin{itemize}
+        \item Servo 0 $\rightarrow$ GPIO5
+        \item Servo 1 $\rightarrow$ GPIO7
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.45\textwidth]{proto1.jpeg}
+    \caption{Circuit diagram showing ESP32-C3 wiring with 5 flex sensors and 2 Smraza Micro Servo S51 motors.}
+    \label{fig:circuit}
+\end{figure}
+
+\section{Functional Testing and Calibration}
+
+After wiring the ESP32-C3 with the flex sensors and servos as described in the previous section, functionality can be verified using two test scripts: one for the flex sensors and another for servo motion.
+
+\subsection{Flex Sensor Data Capture}
+
+A Python or C-based script is used to read the analog values from the ESP32-C3's ADC pins. These values are mapped linearly to a range of 0 to 100. Based on empirical testing, flex sensor states are interpreted as follows:
+
+\begin{itemize}
+    \item Values $\leq 40$: Sensor is bent \textbf{backwards}
+    \item Values $> 40$: Sensor is bent \textbf{forwards}
+\end{itemize}
+
+These thresholds can be fine-tuned per sensor using calibration profiles stored in software.
+
+\subsection{Servo Function Testing}
+
+A separate script drives the two Smraza Micro Servo S51 motors through their full range of motion for two minutes. The test parameters are as follows:
+
+\begin{itemize}
+    \item \textbf{Waveform Generator:} Squarewave, 50~Hz frequency, 5~V\textsubscript{PP} (peak-to-peak)
+    \item \textbf{Power Supply:} 4.8~V, 5~A
+    \item \textbf{PWM Duty Cycle Calibration:}
+    \begin{itemize}
+        \item \textbf{2.3\% duty cycle:} Servo rotates fully to the \textbf{left}
+        \item \textbf{12.4\% duty cycle:} Servo rotates fully to the \textbf{right}
+    \end{itemize}
+\end{itemize}
+
+These values are used to validate the full operational range of the servo motors and ensure consistent response to PWM control signals.
+
+
+\end{document}
