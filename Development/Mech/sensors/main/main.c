@@ -19,7 +19,9 @@
 #define WIFI_PASS "12345678"
 #define CLIENT_ID "jhovanny"
 #define API_KEY "THERAjhov_cred_2025"
-#define SERVER_URL "http://3.129.247.77:5000"
+#define SERVER_URL "http://ec2-3-129-247-77.us-east-2.compute.amazonaws.com:5000"
+
+//public IPV4 address of the server: 3.129.247.77
 
 #define FLEX_CHANNEL ADC_CHANNEL_0
 #define FLEX_WIDTH ADC_WIDTH_BIT_12
