@@ -7,8 +7,9 @@ BASE_DIR = "./cloud_storage"
 
 # Replace or expand this dictionary to support multiple authorized ESP clients
 API_KEYS = {
-    "jhovanny": "THERAjhov_cred_2025",  # client_id : api_key
+    "jhovanny": "THERAjhov_cred_2025",
 }
+
 
 @app.route('/upload/<user>/<timestamp>', methods=['POST'])
 def upload(user, timestamp):

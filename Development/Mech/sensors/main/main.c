@@ -18,7 +18,7 @@
 #define WIFI_SSID "Jho"
 #define WIFI_PASS "12345678"
 #define CLIENT_ID "jhovanny"
-#define API_KEY   "THERAjhov_cred_2025"
+#define API_KEY "THERAjhov_cred_2025"
 #define SERVER_URL "http://3.129.247.77:5000"
 
 #define FLEX_CHANNEL ADC_CHANNEL_0
@@ -90,7 +90,7 @@ static void send_data_to_server(void) {
 
     esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_http_client_set_header(client, "Content-Type", "application/json");
-    esp_http_client_set_header(client, "X-API-KEY", API_KEY); // ✅ Add the API key
+    esp_http_client_set_header(client, "X-API-KEY", API_KEY);
     esp_http_client_set_post_field(client, post_data, strlen(post_data));
 
     esp_err_t err = esp_http_client_perform(client);
