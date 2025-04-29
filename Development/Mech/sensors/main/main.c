@@ -79,8 +79,9 @@ static void send_data_to_server(void) {
     cJSON_AddItemToObject(root, "flex_percent", flexes);
 
     char url[256];
-snprintf(url, sizeof(url),
+    snprintf(url, sizeof(url),
     "http://192.168.137.181:5000/upload/%s/%s", CLIENT_ID, timestamp);
+
     ESP_LOGI("HTTP", "URL: %s", url);
 
     char *post_data = cJSON_Print(root);

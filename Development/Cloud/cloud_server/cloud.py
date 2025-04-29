@@ -6,14 +6,16 @@ import time
 app = Flask(__name__)
 BASE_DIR = "./cloud_storage"
 
-@app.route('/upload/<user>/<folder>', methods=['POST'])
-def upload(user, folder):
+@app.route('/upload/<user>/<session>', methods=['POST'])
+def upload(user, session):
     data = request.get_json()
-    path = os.path.join(BASE_DIR, user, folder)
-    os.makedirs(path, exist_ok=True)
-    with open(os.path.join(path, "data.json"), "w") as f:
+    user_path = os.path.join(BASE_DIR, user)
+    os.makedirs(user_path, exist_ok=True)
+    file_path = os.path.join(user_path, f"Session_{session}.json")
+    with open(file_path, "w") as f:
         json.dump(data, f)
     return jsonify({"message": "Upload complete"})
+
 
 @app.route('/download/<user>/<folder>', methods=['GET'])
 def download(user, folder):
