@@ -20,7 +20,19 @@
     "react-datepicker": "*",
     "three": "*",
     "@react-three/fiber": "*",
-    "@react-three/drei": "*"
+    "@react-three/drei": "*",
+    "bcrypt": "*",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "*",
+    "cors": "*",
+    "dotenv": "*",
+    "express": "*",
+    "express-openapi-validator": "*",
+    "express-session": "*",
+    "js-yaml": "*",
+    "jsonwebtoken": "*",
+    "pg": "*",
+    "swagger-ui-express": "*"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "*",
@@ -37,11 +49,15 @@
     "jsdom": "*",
     "vite": "*",
     "vite-plugin-eslint": "*",
-    "vitest": "*"
+    "vitest": "*",
+    "nodemon": "*",
+    "jest": "*",
+    "supertest": "*"
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite --port 3000",
+    "front": "vite --port 3000",
+    "back": "nodemon src/server.js",
     "lint": "eslint src --ext js,jsx --no-inline-config --max-warnings 0",
     "test": "vitest run --coverage",
     "watch": "vitest",
