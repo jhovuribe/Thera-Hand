@@ -8,4 +8,4 @@ cadenroberts@Cadens-Air thera_app % npm --version
 10.9.0
 cadenroberts@Cadens-Air thera_app % npm install
 
-To start the app, run "npm run dev" and go to localhost:3000
+To start the app, run "docker compose up -d" and "npm run front" and "npm run back" and go to localhost:3000
