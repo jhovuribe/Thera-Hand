@@ -14,12 +14,14 @@
 #include "esp_netif.h"
 #include "esp_http_client.h"
 #include "cJSON.h"
+#include "esp_sntp.h"  // Added for time sync
 
 #define WIFI_SSID "Jho"
 #define WIFI_PASS "12345678"
 #define CLIENT_ID "jhovanny"
-#define API_KEY "THERAjhov_cred_2025"
-#define SERVER_URL "http://ec2-3-129-247-77.us-east-2.compute.amazonaws.com:5000"
+#define API_KEY   "THERAjhov_cred_2025"
+#define SERVER_URL "http://ec2-3-129-247-77.us-east-2.compute.amazonaws.com:5000" 
+//public DNS name for 1. Reliable routing & DNS resolution and 2. Avoids potental AWS-side restrictions for direct IP access
 
 //public IPV4 address of the server: 3.129.247.77
 
@@ -33,6 +35,37 @@
 static float voltage_array[MAX_SAMPLES];
 static float flex_array[MAX_SAMPLES];
 static int sample_idx = 0;
+
+void initialize_sntp(void) {
+    ESP_LOGI("SNTP", "Initializing SNTP");
+    sntp_setoperatingmode(SNTP_OPMODE_POLL);
+    sntp_setservername(0, "pool.ntp.org");
+    sntp_init();
+}
+
+bool obtain_time(void) {
+    initialize_sntp();
+
+    time_t now = 0;
+    struct tm timeinfo = { 0 };
+    int retry = 0;
+    const int retry_count = 10;
+
+    while (timeinfo.tm_year < (2023 - 1900) && ++retry < retry_count) {
+        ESP_LOGI("SNTP", "Waiting for system time... (%d/%d)", retry, retry_count);
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        time(&now);
+        localtime_r(&now, &timeinfo);
+    }
+
+    if (timeinfo.tm_year < (2023 - 1900)) {
+        ESP_LOGE("SNTP", "Failed to get time over NTP.");
+        return false;
+    }
+
+    ESP_LOGI("SNTP", "Time obtained successfully.");
+    return true;
+}
 
 static bool wifi_init_sta(void) {
     esp_netif_init();
@@ -79,7 +112,7 @@ static void send_data_to_server(void) {
     cJSON_AddItemToObject(root, "voltages", cJSON_CreateFloatArray(voltage_array, sample_idx));
     cJSON_AddItemToObject(root, "flex_percent", cJSON_CreateFloatArray(flex_array, sample_idx));
 
-    char url[128];
+    char url[256];
     snprintf(url, sizeof(url), SERVER_URL "/upload/%s/%s", CLIENT_ID, timestamp);
     char *post_data = cJSON_Print(root);
 
@@ -114,6 +147,11 @@ void app_main(void) {
 
     if (!wifi_init_sta()) {
         ESP_LOGE("MAIN", "Wi-Fi connection failed. Halting program.");
+        return;
+    }
+
+    if (!obtain_time()) {
+        ESP_LOGE("MAIN", "Failed to obtain time. Halting program.");
         return;
     }
 

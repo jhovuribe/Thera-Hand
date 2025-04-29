@@ -5,11 +5,9 @@ from datetime import datetime
 app = Flask(__name__)
 BASE_DIR = "./cloud_storage"
 
-# Replace or expand this dictionary to support multiple authorized ESP clients
 API_KEYS = {
     "jhovanny": "THERAjhov_cred_2025",
 }
-
 
 @app.route('/upload/<user>/<timestamp>', methods=['POST'])
 def upload(user, timestamp):
@@ -25,10 +23,16 @@ def upload(user, timestamp):
     except Exception:
         return jsonify({"error": "Invalid timestamp"}), 400
 
-    # Save JSON
     user_dir = os.path.join(BASE_DIR, user)
     os.makedirs(user_dir, exist_ok=True)
+
+    # Guarantee a new file every time
+    counter = 1
     filepath = os.path.join(user_dir, f"{session_time}.json")
+    while os.path.exists(filepath):
+        filepath = os.path.join(user_dir, f"{session_time}_{counter}.json")
+        counter += 1
+
     data = request.get_json()
 
     with open(filepath, "w") as f:
