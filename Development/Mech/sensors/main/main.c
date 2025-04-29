@@ -18,13 +18,14 @@
 #define WIFI_SSID "Jho"
 #define WIFI_PASS "12345678"
 #define CLIENT_ID "jhovanny"
+#define API_KEY   "abc123xyz"
+#define SERVER_URL "http://3.129.247.77:5000"
 
 #define FLEX_CHANNEL ADC_CHANNEL_0
 #define FLEX_WIDTH ADC_WIDTH_BIT_12
 #define SAMPLE_COUNT 10
 #define SAMPLE_INTERVAL_MS 50
 #define MAX_DURATION_MS 10000
-
 #define MAX_SAMPLES (MAX_DURATION_MS / SAMPLE_INTERVAL_MS)
 
 static float voltage_array[MAX_SAMPLES];
@@ -73,16 +74,13 @@ static void send_data_to_server(void) {
     snprintf(timestamp, sizeof(timestamp), "%" PRId64, (int64_t)now);
 
     cJSON *root = cJSON_CreateObject();
-    cJSON *voltages = cJSON_CreateFloatArray(voltage_array, sample_idx);
-    cJSON *flexes = cJSON_CreateFloatArray(flex_array, sample_idx);
-    cJSON_AddItemToObject(root, "voltages", voltages);
-    cJSON_AddItemToObject(root, "flex_percent", flexes);
+    cJSON_AddItemToObject(root, "voltages", cJSON_CreateFloatArray(voltage_array, sample_idx));
+    cJSON_AddItemToObject(root, "flex_percent", cJSON_CreateFloatArray(flex_array, sample_idx));
 
-    char url[256];
-    snprintf(url, sizeof(url),
-        "http://192.168.137.181:5000/upload/%s/%s", CLIENT_ID, timestamp);
-
+    char url[128];
+    snprintf(url, sizeof(url), SERVER_URL "/upload/%s/%s", CLIENT_ID, timestamp);
     char *post_data = cJSON_Print(root);
+
     ESP_LOGI("HTTP", "Posting to: %s\n%s", url, post_data);
 
     esp_http_client_config_t config = {
@@ -92,13 +90,14 @@ static void send_data_to_server(void) {
 
     esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_http_client_set_header(client, "Content-Type", "application/json");
+    esp_http_client_set_header(client, "X-API-KEY", API_KEY); // ✅ Add the API key
     esp_http_client_set_post_field(client, post_data, strlen(post_data));
-    esp_err_t err = esp_http_client_perform(client);
 
+    esp_err_t err = esp_http_client_perform(client);
     if (err == ESP_OK) {
         ESP_LOGI("HTTP", "Status = %d, content_length = %" PRId64,
-            esp_http_client_get_status_code(client),
-            (int64_t)esp_http_client_get_content_length(client));
+                 esp_http_client_get_status_code(client),
+                 (int64_t)esp_http_client_get_content_length(client));
     } else {
         ESP_LOGE("HTTP", "HTTP POST failed: %s", esp_err_to_name(err));
     }
