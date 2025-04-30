@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -7,12 +8,12 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import MessageIcon from '@mui/icons-material/Message';
 import FrontHandIcon from '@mui/icons-material/FrontHand';
 import BackHandIcon from '@mui/icons-material/BackHand';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import HistoryIcon from '@mui/icons-material/History';
+import LogoutIcon from '@mui/icons-material/Logout';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
 import Grid from '@mui/material/Grid';
 import { useTheme, useMediaQuery } from '@mui/material';
@@ -34,17 +35,31 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import './App.css';
 // https://mui.com/material-ui/react-drawer/ RESPONSIVE DRAWER
 // chatgpt.com & my brain worked together with responsive drawer
 // as the base for this assignment.
 import { Canvas } from "@react-three/fiber";
 import { HandModel } from "./HandModel";
+import PropTypes from 'prop-types';
+import Avatar from '@mui/material/Avatar';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemButton from '@mui/material/ListItemButton';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import PersonIcon from '@mui/icons-material/Person';
+import AddIcon from '@mui/icons-material/Add';
+import Divider from '@mui/material/Divider';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
 import { OrbitControls } from "@react-three/drei";
 
-const drawerWidth = 240;
+const drawerWidth = 273;
 
 /**
  * @param {object} props - The props passed to the component.
@@ -52,14 +67,84 @@ const drawerWidth = 240;
  * @return {JSX.Element} The rendered ResponsiveDrawer component.
  */
 
+const MessageDialog = React.memo(({ open, onClose, messageContent, setMessageContent, messages, selectedUser, isDoctor, doctorName, handleSendMessage }) => (
+  <Dialog fullScreen open={open} onClose={onClose}>
+    <Box sx={{ position: 'fixed', bottom: 5, right: 10, zIndex: 6000 }}>
+      <TextField
+        fullWidth
+        multiline
+        maxRows={10}
+        variant="outlined"
+        label={
+          isDoctor
+            ? `Message ${selectedUser?.name || 'Patient'}`
+            : `Message ${doctorName || 'Doctor'}`
+        }
+        color="warning"
+        placeholder=""
+        value={messageContent}
+        onChange={(e) => setMessageContent(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+          }
+        }}
+      />
+    </Box>
+    <AppBar sx={{ position: 'relative' }} color="warning">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
+          <CloseIcon />
+        </IconButton>
+        <Typography sx={{ ml: 1, mt: 0.25, flex: 1 }} variant="overline">
+          Messages
+        </Typography>
+      </Toolbar>
+    </AppBar>
+    <List>
+      {messages.map((msg) => {
+        const isSender = msg.sender_id === JSON.parse(localStorage.getItem('user'))?.id;
+        return (
+          <React.Fragment key={msg.id}>
+            <ListItemText
+              sx={{ ml: isSender ? 100 : 3 }}
+              disableTypography
+              primary={
+                <>
+                  <Box>
+                    <Typography variant="overline" color="text.primary">
+                      {isSender
+                        ? `YOU AT ${new Date(msg.created_at || Date.now()).toLocaleString()}`
+                        : `${(selectedUser?.name || doctorName || selectedUser?.email || 'UNKNOWN').toUpperCase()} AT ${new Date(msg.created_at || Date.now()).toLocaleString()}`
+                      }
+                    </Typography>
+
+                  </Box>
+                  <Box>
+                    <Typography variant="overline" color="warning.main" sx={{ mt: 0.25 }}>
+                      {msg.content}
+                    </Typography>
+                  </Box>
+                </>
+              }
+            />
+            <Divider />
+          </React.Fragment>
+        );
+      })}
+    </List>
+  </Dialog>
+));
+
+
 
 function Home() {
   const [isClosed, setIsClosed] = React.useState(false);
   const history = useNavigate();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [alignment, setAlignment] = React.useState('analytics');
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const [startDate, setStartDate] = React.useState(new Date());
 
@@ -71,35 +156,361 @@ function Home() {
     localStorage.removeItem('user');
     history('/login');
   };
+
+  const handleCreate = () => {
+    history('/create');
+  }
+
   const handleSelect = (finger, popupState) => {
     setSelectedFinger(finger);
     popupState.close();
+  };
+  const [patients, setPatients] = React.useState([]);
+  const initialUser = React.useMemo(() => JSON.parse(localStorage.getItem('user')), []);
+
+  const [selectedUser, setSelectedUser] = React.useState(initialUser);
+  const [messageContent, setMessageContent] = React.useState('');
+
+  const handleSendMessage = async () => {
+    if (!messageContent?.trim()) return;
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) return;
+
+    try {
+      const patientId = user.role === 'doctor' ? selectedUser?.id : user.id;
+
+      const response = await fetch(`http://localhost:3010/v0/messages/${patientId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+        body: JSON.stringify({ content: messageContent }),
+      });
+
+      if (response.ok) {
+        const newMessage = {
+          sender_id: user.id,
+          recipient_id: user.role === 'doctor' ? selectedUser?.id : doctorName,
+          content: messageContent,
+          id: Date.now(),
+        };
+        setMessages((prev) => [...prev, newMessage]);
+        setMessageContent('');
+      } else {
+        const errorText = await response.text();
+        console.error('Send message failed:', errorText);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      const stored = JSON.parse(localStorage.getItem('user'));
+
+      if (!stored) {
+        console.warn('No user in localStorage');
+        return;
+      }
+
+      if (stored?.role !== 'doctor') {
+        console.warn('Not a doctor, skipping fetch');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:3010/v0/home/${stored.id}`, {
+        headers: {
+          Authorization: `Bearer ${stored.accessToken}`,
+          Accept: 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPatients(data);
+      } else {
+        const err = await response.text();
+        console.error('Failed to load patients:', err);
+      }
+    };
+
+    fetchPatients();
+  }, []);
+
+
+  const handleUserSelect = (user) => {
+    setSelectedUser(user);
+    console.log('Selected user:', user);
   };
 
   const handleSelectExercise = (exercise, popupState) => {
     setSelectedExercise(exercise);
     popupState.close();
   };
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
-  const handleAnalytics = () => {
-    setAlignment('analytics');
+  const [openMessages, setOpenMessages] = React.useState(false);
+
+  const handleClickOpenMessages = () => {
+    setOpenMessages(true);
   };
 
-  const handleHistory = () => {
-    setAlignment('history');
+  const handleCloseMessages = () => {
+    setOpenMessages(false);
   };
 
-  const handleExercises = () => {
-    setAlignment('exercises');
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState('');
+  const [noButtons, setNoButtons] = React.useState(false);
+  useEffect(() => {
+    if (!isMobile) {
+      setNoButtons(false);
+      setMobileOpen(false);
+    }
+  }, [isMobile]);
+  const handleClickOpen = () => {
+    setOpen(true);
+    setNoButtons(!noButtons);
   };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+    setNoButtons(!noButtons);
+  };
+
   const handleDrawerClose = () => {
     setMobileOpen(false);
   };
 
+
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+    setNoButtons(!noButtons);
   };
 
+  const [value, setValue] = React.useState(0);
+  const isDoctor = JSON.parse(localStorage.getItem('user'))?.role === 'doctor';
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  function SimpleDialog(props) {
+    const { onClose, selectedValue, open } = props;
+
+    const handleClose = () => {
+      onClose(selectedValue);
+    };
+
+    const handleListItemClick = (value) => {
+      onClose(value);
+    };
+
+    return (
+      <Dialog onClose={handleClose} open={open}>
+        {isDoctor ? (<DialogTitle sx={{ ml: 5 }}><Typography variant="overline" color="warning">SELECT A PATIENT</Typography></DialogTitle>) : null}
+        <List sx={{ pt: 0 }}>
+          {isDoctor ? (<>{patients.map((user) => (
+            <ListItem disablePadding key={user.id}>
+              <ListItemButton onClick={() => {
+                handleUserSelect(user);
+                handleClose();
+                handleListItemClick(user.name);
+              }}
+                selected={selectedUser?.id === user.id}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: 'warning.light',
+                  },
+                  '&.Mui-selected': {
+                    backgroundColor: 'warning.dark',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: 'warning.dark',
+                    },
+                  },
+                }}>
+                <ListItemAvatar>
+                  <Avatar sx={{ bgcolor: 'warning.main' }} style={{ color: 'white' }}>
+                    <PersonIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="overline" color="text.primary">
+                      {user.email}
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+            <ListItem disablePadding>
+              <ListItemButton
+                autoFocus
+                onClick={() => handleCreate()} sx={{
+                  '&:hover': {
+                    backgroundColor: 'warning.light',
+                  },
+                  '&.Mui-selected': {
+                    backgroundColor: 'warning.dark',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: 'warning.dark',
+                    },
+                  },
+                }}
+              >
+                <ListItemAvatar>
+                  <Avatar>
+                    <AddIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="overline" color="text.primary">
+                      CREATE PATIENT
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem></>) : null}
+          <ListItem disablePadding>
+            <ListItemButton
+              autoFocus
+              onClick={() => handleLogout()} sx={{
+                '&:hover': {
+                  backgroundColor: 'warning.light',
+                },
+                '&.Mui-selected': {
+                  backgroundColor: 'warning.dark',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'warning.dark',
+                  },
+                }, mb: -0.95
+              }}
+            >
+              <ListItemAvatar >
+                <Avatar>
+                  <LogoutIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText sx={{ mr: 1 }}
+                primary={
+                  <Typography variant="overline" color="text.primary" >
+                    Logout
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Dialog>
+    );
+  }
+
+  SimpleDialog.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    selectedValue: PropTypes.string.isRequired,
+  };
+
+  function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      </div>
+    );
+  }
+
+  CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const [messages, setMessages] = React.useState([]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) return;
+
+      let patientId = user.id; // default for patient
+
+      // If the user is a doctor, use selectedUser.id as the patient
+      if (user.role === 'doctor') {
+        if (!selectedUser?.id) return; // no patient selected yet
+        patientId = selectedUser.id;
+      }
+
+      const response = await fetch(`http://localhost:3010/v0/messages/${patientId}`, {
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
+          Accept: 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessages(data);
+      } else {
+        const err = await response.text();
+        console.error('Failed to load messages:', err);
+      }
+    };
+
+    fetchMessages();
+  }, [selectedUser]);
+
+  const [doctorName, setDoctorName] = React.useState('');
+
+
+  useEffect(() => {
+    const fetchDoctorName = async () => {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user || user.role !== 'patient') return;
+      const response = await fetch(`http://localhost:3010/v0/doctor/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
+          Accept: 'application/json',
+        },
+      });
+      console.log("hi2");
+      if (response.ok) {
+        const doctor = await response.json(); // should return doctor object with .name
+        setDoctorName(doctor.name);
+      } else {
+        console.error('Failed to fetch doctor');
+      }
+    };
+
+    fetchDoctorName();
+    console.log(doctorName);
+  }, []);
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -155,30 +566,45 @@ function Home() {
   const drawer = (
     <div>
       <Toolbar />
-      <ToggleButtonGroup color="warning" value={alignment}
-        aria-label="Platform" >
-        <Typography color='warning'>
-          <ToggleButton value="analytics" onClick={handleAnalytics} color='warning'>
-            <Typography color={alignment === 'analytics' ? 'warning' : 'white'} variant="overline" sx={{ ml: 0.2 }}>
-              {`Analytics`}
-              <AnalyticsIcon sx={{ mb: -0.9 }} />
-            </Typography>
-          </ToggleButton>
-        </Typography>
-        <ToggleButton value="history" onClick={handleHistory}>
-          <Typography color={alignment === 'history' ? 'warning' : 'white'} variant="overline" sx={{ ml: 0.2 }}>
-            {`History`}
-            <HistoryIcon sx={{ mb: -0.9 }} />
-          </Typography>
-        </ToggleButton>
-        <ToggleButton value="exercises" onClick={handleExercises}>
-          <Typography color={alignment === 'exercises' ? 'warning' : 'white'} variant="overline" sx={{ ml: 0.2 }}>
-            {`Exercises`}
-            <SignLanguageIcon sx={{ mb: -0.9 }} />
-          </Typography>
-        </ToggleButton>
-      </ToggleButtonGroup>
-      {alignment === 'analytics' ? (
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs TabIndicatorProps={{
+          style: {
+            backgroundColor: '#ed6c02', // warning.main default from MUI
+          },
+        }} value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab label={
+            <Box display="flex" alignItems="center" gap={0.5}>
+              <AnalyticsIcon sx={{ mb: 0.25 }} />
+              Analytics
+            </Box>
+          } sx={{
+            '&.Mui-selected': {
+              color: 'warning.main',
+            },
+          }}{...a11yProps(0)} />
+          <Tab label={
+            <Box display="flex" alignItems="center" gap={0.5}>
+              <HistoryIcon sx={{ mb: 0.25 }} />
+              History
+            </Box>
+          } sx={{
+            '&.Mui-selected': {
+              color: 'warning.main',
+            },
+          }}{...a11yProps(1)} />
+          <Tab label={
+            <Box display="flex" alignItems="center" gap={0.5}>
+              <SignLanguageIcon sx={{ mb: 0.75 }} />
+              Exercises
+            </Box>
+          } sx={{
+            '&.Mui-selected': {
+              color: 'warning.main',
+            },
+          }}{...a11yProps(2)} />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0}>
         <Box sx={{ display: 'flex' }}>
           <PopupState variant="popover" popupId="demo-popup-menu">
             {(popupState) => (
@@ -227,13 +653,14 @@ function Home() {
             ))}
           </List>
         </Box>
-      ) : alignment === 'history' ? (
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
         <>
           <Box sx={{
             position: 'fixed',
             minWidth: 628,
             top: 131,
-            left: 102,
+            left: 120,
             zIndex: 1300
           }}>
             <>
@@ -337,7 +764,8 @@ function Home() {
             ))}
           </List>
         </>
-      ) : alignment === 'exercises' ? (
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
         <Box sx={{ display: 'flex' }}>
           <PopupState variant="popover" popupId="demo-popup-menu">
             {(popupState) => (
@@ -394,7 +822,8 @@ function Home() {
             </TableContainer>
           </Box>
         </Box>
-      ) : null}
+      </CustomTabPanel>
+
     </div>
   );
 
@@ -416,7 +845,7 @@ function Home() {
             aria-label="toggle drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2, display: { md: 'none' } }}
           >
             <MenuIcon />
           </IconButton>
@@ -453,7 +882,7 @@ function Home() {
               }
             }}
             sx={{
-              'display': { xs: 'block', sm: 'none' },
+              'display': { xs: 'block', md: 'none' },
               '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth * 1.5025 },
             }}
           >
@@ -509,47 +938,80 @@ function Home() {
             </Grid>
           </Grid>
         </Box>
-        <Button variant="contained" color="warning"
+        {!openMessages && !noButtons && !mobileOpen && (
+          <Button variant="contained" color="warning"
+            sx={{
+              position: 'fixed',
+              bottom: 5,
+              left: isMobile ? 10 : 1.5025 * drawerWidth + 4,
+              zIndex: 2000,
+            }}
+            onClick={() => setIsClosed((prev) => !prev)}
+          >
+            {isClosed ? "Open Hand" : "Close Hand"}
+          </Button>
+        )}
+        {!openMessages && !noButtons && (
+          <Button variant="contained" color="warning"
+            sx={{
+              position: 'fixed',
+              bottom: 5,
+              right: 10,
+              zIndex: 2000,
+            }}
+            onClick={handleClickOpenMessages}
+          >
+            <Typography variant="overline">Messages</Typography><MessageIcon sx={{ ml: 1 }} />
+          </Button>
+        )}
+        <MessageDialog
+          open={openMessages}
+          onClose={handleCloseMessages}
+          messageContent={messageContent}
+          setMessageContent={setMessageContent}
+          handleSendMessage={handleSendMessage}
+          messages={messages}
+          selectedUser={selectedUser}
+          isDoctor={isDoctor}
+          doctorName={doctorName}
+        />
+
+        <IconButton variant="contained" color="warning"
           sx={{
             position: 'fixed',
-            bottom: 5,
+            top: 10,
             right: 10,
             zIndex: 2000,
-          }}
-          onClick={() => setIsClosed((prev) => !prev)}
+          }} style={{ color: 'white' }}
+          onClick={handleClickOpen}
         >
-          {isClosed ? "Open Hand" : "Close Hand"}
-        </Button>
-        <Button variant="contained" color="warning"
-          sx={{
-            position: 'fixed',
-            top: 15,
-            right: 10,
-            zIndex: 2000,
-          }}
-          onClick={() => handleLogout()}
-        >
-          Logout
-        </Button>
-        <Box sx={{
-          pointerEvents: 'none',
-          position: 'absolute',
-          bottom: 30,
-          right: 0,
-          top: 270,
-          width: isMobile ? '100%' : `calc(100% - ${1.5025 * drawerWidth}px)`,
-          display: 'flex',
-          height: '100%',
-          justifyContent: 'flex-end',
-          alignItems: 'flex-end',
-        }}>
-          <Canvas camera={{ position: [0, 0, 5] }}>
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-            <HandModel isClosed={isClosed} />
-            <OrbitControls />
-          </Canvas>
-        </Box>
+          <Typography variant='overline'>{selectedUser.name}</Typography><AccountCircleIcon sx={{ ml: 0.75, mb: 0.275 }} />
+        </IconButton>
+        <SimpleDialog
+          selectedValue={selectedValue}
+          open={open}
+          onClose={handleClose}
+        />
+        {!openMessages && (
+          <Box sx={{
+            pointerEvents: 'none',
+            position: 'absolute',
+            bottom: 30,
+            right: 0,
+            top: 270,
+            width: isMobile ? '100%' : `calc(100% - ${1.5025 * drawerWidth}px)`,
+            display: 'flex',
+            height: '100%',
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+          }}>
+            <Canvas camera={{ position: [0, 0, 5] }}>
+              <ambientLight />
+              <pointLight position={[10, 10, 10]} />
+              <HandModel isClosed={isClosed} />
+              <OrbitControls />
+            </Canvas>
+          </Box>)}
 
       </Box>
     </Box>
