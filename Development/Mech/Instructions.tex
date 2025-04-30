@@ -179,4 +179,22 @@ To power two Parallax continuous rotation servos simultaneously, a regulated 5~V
 
 \subsection{Barrel Jack Power Setup}
 
+\begin{itemize}
+    \item Use a 5~V DC power supply rated at a minimum of 2~A.
+    \item Connect the positive terminal of the power supply to the barrel jack's center pin.
+    \item Connect the ground terminal to the outer sleeve of the barrel jack.
+    \item The barrel jack then connects to the breadboard's 5~V and GND rails.
+    \item From the breadboard rails, connect power and ground to each Parallax servo as follows:
+    \begin{itemize}
+        \item Red wire (V\textsubscript{CC}) $\rightarrow$ 5~V rail
+        \item Black wire (GND) $\rightarrow$ GND rail
+        \item White wire (signal) $\rightarrow$ ESP32-C3 GPIO pin
+    \end{itemize}
+    \item Example GPIO assignments:
+    \begin{itemize}
+        \item Servo A $\rightarrow$ GPIO6
+        \item Servo B $\rightarrow$ GPIO7
+    \end{itemize}
+\end{itemize}
+
 \end{document}
