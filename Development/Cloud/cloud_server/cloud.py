@@ -6,9 +6,11 @@ app = Flask(__name__)
 BASE_DIR = "./cloud_storage"
 
 API_KEYS = {
-    "jhovanny": "THERAjhov_cred_2025",
     "ethan": "THERAethan_cred_2025",
+    "aliyaa": "THERAaliyaa_cred_2025",
+    "jhovanny": "THERAjhovanny_cred_2025",
 }
+
 
 @app.route('/upload/<user>/<timestamp>', methods=['POST'])
 def upload(user, timestamp):
@@ -55,6 +57,28 @@ def check_network_connection():
         return True
     except OSError:
         return False
+    
+# app updates ----------------------------------------------
+
+@app.route('/register_user/<client_id>', methods=['POST'])
+def register_user(client_id):
+    user_dir = os.path.join(BASE_DIR, client_id)
+    os.makedirs(user_dir, exist_ok=True)
+    return jsonify({"message": f"Cloud directory created for user {client_id}"})
+
+@app.route('/user_data/<client_id>', methods=['GET'])
+def list_user_sessions(client_id):
+    user_dir = os.path.join(BASE_DIR, client_id)
+    if not os.path.exists(user_dir):
+        return jsonify({"error": "User not found"}), 404
+
+    files = sorted(os.listdir(user_dir))
+    sessions = []
+    for file in files:
+        with open(os.path.join(user_dir, file), "r") as f:
+            sessions.append(json.load(f))
+    return jsonify(sessions)
+#---------------------------------------------
 
 if __name__ == "__main__":
     print("[Cloud Server] Checking Wi-Fi connection...")

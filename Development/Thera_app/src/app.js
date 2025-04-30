@@ -11,6 +11,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
+import axios from "axios";
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -291,6 +293,18 @@ const createPatient = async (req, res) => {
 
     const patientId = userRes.rows[0].id;
 
+    // Notify Flask server to create cloud folder for new user
+    try {
+      await fetch(`http://3.129.247.77:5000/register_user/${patientId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (cloudErr) {
+      console.error('Cloud user directory creation failed:', cloudErr);
+      // Optional: don't throw here so DB user creation still succeeds
+    }
+
+
     await pool.query(`INSERT INTO patients (id) VALUES ($1)`, [patientId]);
     await pool.query(`INSERT INTO doctor_patients (doctor_id, patient_id) VALUES ($1, $2)`, [doctorId, patientId]);
 
@@ -330,6 +344,29 @@ app.get('/v0/home/:doctor_id', check, getPatients);
 app.get('/v0/doctor/:patient_id', check, getDoctorForPatient);
 app.post('/v0/create/:doctor_id', check, createPatient);
 
+//FETCH DATA FROM AWS FLASK SERVER
+app.get('/v0/flex-data', check, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Get the user's email from PostgreSQL
+    const result = await pool.query('SELECT data->>email AS email FROM users WHERE id = $1', [userId]);
+    if (result.rows.length === 0) return res.status(404).send('User not found');
+
+    const email = result.rows[0].email;
+    const clientId = email.split('@')[0]; // This assumes usernames are based on email prefix
+
+    // Query AWS Flask server
+    const flaskURL = `http://ec2-3-129-247-77.us-east-2.compute.amazonaws.com:5000/list/${clientId}`;
+    const response = await axios.get(flaskURL);
+
+    res.json({ files: response.data.files });
+
+  } catch (err) {
+    console.error('Error fetching ESP data from cloud:', err);
+    res.status(500).send('Could not fetch cloud data');
+  }
+});
 
 
 // ───── ERROR HANDLER ─────────────────────────────────────────────────────────────
