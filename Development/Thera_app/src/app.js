@@ -346,27 +346,18 @@ app.post('/v0/create/:doctor_id', check, createPatient);
 
 //FETCH DATA FROM AWS FLASK SERVER
 app.get('/v0/flex-data', check, async (req, res) => {
-  try {
-    const userId = req.user.id;
+  const userId = req.user.id;
 
-    // Get the user's email from PostgreSQL
-    const result = await pool.query('SELECT data->>email AS email FROM users WHERE id = $1', [userId]);
-    if (result.rows.length === 0) return res.status(404).send('User not found');
+  const result = await pool.query('SELECT data->>email AS email FROM users WHERE id = $1', [userId]);
+  const email = result.rows[0].email;
+  const clientId = email.split('@')[0];  // extract username
 
-    const email = result.rows[0].email;
-    const clientId = email.split('@')[0]; // This assumes usernames are based on email prefix
+  const flaskURL = `http://ec2-3-129-247-77.us-east-2.compute.amazonaws.com:5000/user_data/${clientId}`;
+  const response = await axios.get(flaskURL);
 
-    // Query AWS Flask server
-    const flaskURL = `http://ec2-3-129-247-77.us-east-2.compute.amazonaws.com:5000/list/${clientId}`;
-    const response = await axios.get(flaskURL);
-
-    res.json({ files: response.data.files });
-
-  } catch (err) {
-    console.error('Error fetching ESP data from cloud:', err);
-    res.status(500).send('Could not fetch cloud data');
-  }
+  res.json(response.data);
 });
+
 
 
 // ───── ERROR HANDLER ─────────────────────────────────────────────────────────────
