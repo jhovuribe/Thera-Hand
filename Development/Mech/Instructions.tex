@@ -217,4 +217,11 @@ The direction of rotation is determined by the PWM duty cycle:
 
 An example pseudocode implementation:
 
+\begin{lstlisting}
+    // Pseudocode for testing Parallax servos
+    setPWMFrequency(50);  // 50 Hz standard
+    setPWMDuty(GPIO6, 6.5);  // Clockwise
+    setPWMDuty(GPIO7, 6.5);
+    delay(20000);  // 20 seconds
+    
 \end{document}
