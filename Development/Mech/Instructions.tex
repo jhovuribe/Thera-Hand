@@ -173,5 +173,64 @@ A separate script drives the two Smraza Micro Servo S51 motors through their ful
 
 These values are used to validate the full operational range of the servo motors and ensure consistent response to PWM control signals.
 
+\section{5V Power Supply and Continuous Servo Control}
+
+To power two Parallax continuous rotation servos simultaneously, a regulated 5~V power supply is connected via a barrel jack interface. This setup provides adequate current and voltage stability to operate both servos under load.
+
+\subsection{Barrel Jack Power Setup}
+
+\begin{itemize}
+    \item Use a 5~V DC power supply rated at a minimum of 2~A.
+    \item Connect the positive terminal of the power supply to the barrel jack's center pin.
+    \item Connect the ground terminal to the outer sleeve of the barrel jack.
+    \item The barrel jack then connects to the breadboard's 5~V and GND rails.
+    \item From the breadboard rails, connect power and ground to each Parallax servo as follows:
+    \begin{itemize}
+        \item Red wire (V\textsubscript{CC}) $\rightarrow$ 5~V rail
+        \item Black wire (GND) $\rightarrow$ GND rail
+        \item White wire (signal) $\rightarrow$ ESP32-C3 GPIO pin
+    \end{itemize}
+    \item Example GPIO assignments:
+    \begin{itemize}
+        \item Servo A $\rightarrow$ GPIO6
+        \item Servo B $\rightarrow$ GPIO7
+    \end{itemize}
+\end{itemize}
+
+\subsection{Servo Direction Test Program}
+
+A test script is used to validate bidirectional rotation of both continuous rotation servos. The following logic is applied:
+
+\begin{itemize}
+    \item Rotate both servos clockwise for 20 seconds.
+    \item Pause momentarily.
+    \item Rotate both servos counter-clockwise for 20 seconds.
+\end{itemize}
+
+The direction of rotation is determined by the PWM duty cycle:
+
+\begin{itemize}
+    \item \textbf{Clockwise:} 1.3~ms pulse width (approximately 6.5\% duty at 50~Hz)
+    \item \textbf{Counter-clockwise:} 1.7~ms pulse width (approximately 8.5\% duty at 50~Hz)
+    \item \textbf{Stop (optional):} 1.5~ms pulse width (neutral)
+\end{itemize}
+
+An example pseudocode implementation:
+
+\begin{lstlisting}
+    // Pseudocode for testing Parallax servos
+    setPWMFrequency(50);  // 50 Hz standard
+    setPWMDuty(GPIO6, 6.5);  // Clockwise
+    setPWMDuty(GPIO7, 6.5);
+    delay(20000);  // 20 seconds
+
+    setPWMDuty(GPIO6, 8.5);  // Counter-clockwise
+    setPWMDuty(GPIO7, 8.5);
+    delay(20000);  // 20 seconds
+
+    // Optionally stop
+    setPWMDuty(GPIO6, 7.5);
+    setPWMDuty(GPIO7, 7.5);
+\end{lstlisting}
 
 \end{document}
