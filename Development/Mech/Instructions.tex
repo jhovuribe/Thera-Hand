@@ -246,7 +246,6 @@ An example pseudocode implementation:
     \item Always power the ESP32-C3 from a separate 3.3~V source or USB while driving high-current loads like servos from 5~V.
     \item Verify power supply ratings and ensure the total current draw does not exceed 5~A.
     \item Add a common ground between all components (ESP32, servos, sensors, and power supply).
-    \item Consider adding a 470~$\mu$F capacitor across the 5~V and GND rails to absorb voltage spikes from servo startup.
 \end{itemize}
 
 \end{document}
