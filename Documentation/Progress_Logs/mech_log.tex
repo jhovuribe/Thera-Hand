@@ -123,7 +123,7 @@ Worked with Andy to find another hand model, and also ordered metal wiring, will
 
 
 \section*{2025-04-17}
-We worked on expanding data reading to 5 flex sensors at a time. This was done by replicating the wiring for the flex sensor 5 times over and connecting them to different GPIO pins on the ESP32C3. We also changed the C script to assign the new GPIO pins into the respective flex sensors and organized output data to display each flex sensor respectively. Got LEDs to help with debugging with output detection. We also plan to use LEDs to test turning the device on and off.
+We worked on expanding data reading to 5 flex sensors at a time. This was done by replicating the wiring for the flex sensor 5 times over and connecting them to different GPIO pins on the ESP32C3. We also modified the C script to assign the new GPIO pins into the respective flex sensors and organized output data to display each flex sensor respectively. Got LEDs to help with debugging with output detection. We also plan to use LEDs to test turning the device on and off.
 
 
 We did some testing to make sure each flex sensor was being read correctly based on the bend.
@@ -188,7 +188,7 @@ Put down testing for functionality of flex sensor data capture and servos functi
 \hrule
 
 \section*{2025-04-29}
-Got new servos and tested their functionality. Used barrel jack and attached to power supply for servos power. We wrote code for continuous rotation servos so that it would rotate clockwise and counter clockwise for 20 seconds. Tested differing exercises along with a failed attempt to change exercises through terminal while flashed to board. Settled on trying to not test other exercises through terminal but to test them through sending full code.
+Got new servos and tested their functionality. Used barrel jack and attached to power supply for servos power. We wrote C code for continuous rotation servos so that it would rotate clockwise and counter clockwise for 20 seconds. Tested differing exercises along with a failed attempt to change exercises through terminal while flashed to board. Settled on trying to not test other exercises through terminal but to test them through sending full code.
 
 
 \vspace{1em}
@@ -198,7 +198,7 @@ Got delivery from BELS. Including both servos and detached power bank for remote
 
 \vspace{1em}
 
-Tested both new servos accounting for strength, power, and rotation. Thought about differing exercises including time, speed and actuation. Adapted over servo code to work with new servos. Settled on the continuous rotation servo due to its ease of code and lower power consumption. Other servo that we ordered was too powerful for use and could be a danger to not only use but could also damage other parts due to strength. Adapted new tests along with thinking of backups in case parts are not delivered in time. Added properly wiring to breadboard for implementing new servos along with detached power source.
+Tested both new servos accounting for strength, power, and rotation. Thought about differing exercises including time, speed and actuation. Adapted over servo code to work with new servos. Settled on the continuous rotation servo due to its ease of code and lower power consumption. Other servo that we ordered was too powerful for use and could be a danger to not only use but could also damage other parts due to strength. Adapted new tests along with thinking of backups in case parts are not delivered in time. Added proper wiring to breadboard for implementing new servos along with detached power source.
 
 \vspace{1em}
 
