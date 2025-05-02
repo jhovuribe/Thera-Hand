@@ -98,7 +98,6 @@ export function HandModel({ isClosed }) {
           bone.rotation.x = target.startX + (target.endX - target.startX) * easedProgress;
           bone.rotation.y = target.startY + (target.endY - target.startY) * easedProgress;
           bone.rotation.z = target.startZ + (target.endZ - target.startZ) * easedProgress;
-          // 🔵 IMPORTANT: No changes to position — so spacing remains correct!
         }
       });
     });

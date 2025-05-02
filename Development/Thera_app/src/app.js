@@ -1,3 +1,4 @@
+// Import modules using ES Module syntax
 import express from 'express';
 import cors from 'cors';
 import yaml from 'js-yaml';
