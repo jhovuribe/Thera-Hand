@@ -10,7 +10,7 @@ cadenroberts@Cadens-Air thera_app % npm install
 
 Run "source .env" for good measure.
 
-To start the app, run "docker compose up -d" and "npm run front" and "npm run back" and go to localhost:3000
+To start the app, run "docker compose up -d" and "npm run front" and "npm run back" and go to localhost:3000/login
 
 
 
