@@ -27,6 +27,14 @@ INSERT INTO users (role, data) VALUES
 INSERT INTO doctors (id)
 SELECT id FROM users WHERE role = 'doctor';
 
+-- Insert users (admins)
+INSERT INTO users (role, data) VALUES
+  ('admin', '{"email": "a@admin.com","password": "$2b$10$VYomD07ETgcZ2O3Uj7Tcheiv4y.F0Yj3aAEBCm7qTcfg6y/wtXA/a","name": "Admin"}');
+
+-- Promote those users to admins
+INSERT INTO admins (id)
+SELECT id FROM users WHERE role = 'admin';
+
 -- Insert fingers for patients
 INSERT INTO fingers (patient_id, data) VALUES
   ((SELECT id FROM users WHERE data->>'email' = 'aliyaa@therahand.com'), '{"name": "Index", "position": [-0.621, 0.104, 0.766, 0.016, -0.296, 1.664, 0.019, -0.078, 1.443]}'),

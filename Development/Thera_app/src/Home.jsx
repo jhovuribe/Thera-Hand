@@ -108,7 +108,7 @@ const MessageDialog = React.memo(({ open, onClose, messageContent, setMessageCon
         return (
           <React.Fragment key={msg.id}>
             <ListItemText
-              sx={{ ml: isSender ? 100 : 3 }}
+              sx={{ ml: isSender ? '55vw' : 3, mr: isSender ? 3 : '55vw' }}
               disableTypography
               primary={
                 <>

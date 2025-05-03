@@ -58,8 +58,8 @@ export default function SignIn() {
         localStorage.removeItem('remember');
         setRememberEmail('');
       }
-
-      navigate('/home');
+      if (JSON.parse(localStorage.getItem('user')).role === 'admin') navigate('/admin');
+      else navigate('/home');
     } catch (err) {
       console.error(err);
       setError('Login failed. Please check your credentials.');

@@ -1,7 +1,7 @@
 import SignIn from './SignIn.jsx';
 import CreateUser from './CreateUser.jsx'
 import Home from './Home.jsx';
-import Unauthorized from './Unauthorized.jsx';
+import Admin from './Admin.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import { ContextProvider } from './Context.jsx';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -28,7 +28,8 @@ function App({ router: Router = BrowserRouter }) {
               <CreateUser/>
             </ProtectedRoute>
           }/>
-          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/*" element={<ProtectedRoute><Home /></ProtectedRoute>}/>
         </Routes>
       </Router>
     </ContextProvider>
