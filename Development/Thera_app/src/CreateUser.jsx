@@ -10,7 +10,6 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { CircularProgress, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Context } from './Context.jsx';
 
 const defaultTheme = createTheme();
 
@@ -18,7 +17,7 @@ export default function CreateUser() {
   const theme = useTheme();
   const warningColor = theme.palette.warning.main;
 
-  const { rememberEmail, setRememberEmail } = useContext(Context);
+  const [rememberEmail, setRememberEmail] = React.useState('');
   const navigate = useNavigate();
   const [newname, setNewname] = useState('');
   const [password, setPassword] = useState('');

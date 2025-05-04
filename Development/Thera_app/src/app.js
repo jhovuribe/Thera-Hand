@@ -173,7 +173,7 @@ const sendMessage = async (req, res) => {
   const userRole = req.user.role;
   const { patient_id } = req.params;
   const { content } = req.body;
-  
+
   if (!content) return res.status(400).send('Message content required');
 
   try {
@@ -198,17 +198,26 @@ const sendMessage = async (req, res) => {
       return res.status(403).send('Invalid role');
     }
 
-    await pool.query(
-      'INSERT INTO messages (sender_id, recipient_id, content) VALUES ($1, $2, $3)',
+    // Insert and return id + sent_at
+    const result = await pool.query(
+      `INSERT INTO messages (sender_id, recipient_id, content)
+       VALUES ($1, $2, $3)
+       RETURNING id, sent_at`,
       [userId, recipientId, content]
     );
 
-    res.status(201).send('Message sent');
+    const message = result.rows[0];
+
+    res.status(201).json({
+      id: message.id,
+      sent_at: message.sent_at
+    });
   } catch (err) {
     console.error('Error in sendMessage:', err);
     res.status(500).send('Internal Server Error');
   }
 };
+
 
 //  ───── GET PATIENTS ─────────────────────────────────────────────────────────────────
 const getPatients = async (req, res) => {
@@ -218,7 +227,7 @@ const getPatients = async (req, res) => {
 
   try {
     // Ensure only the doctor themself can access this
-    if (requesterRole !== 'doctor' || requesterId !== doctor_id) {
+    if ((requesterRole !== 'admin')&&(requesterRole !== 'doctor' || requesterId !== doctor_id )) {
       return res.status(403).send('Forbidden: You can only view your own patients');
     }
 
@@ -266,7 +275,7 @@ const createPatient = async (req, res) => {
   const doctorId = req.params.doctor_id;
   const requester = req.user;
 
-  if (requester.role !== 'doctor' || requester.id !== doctorId) {
+  if (requester.role !== 'admin' && (requester.role !== 'doctor' || requester.id !== doctorId)) {
     return res.status(403).send('Only the logged-in doctor can create patients for themselves');
   }
 
@@ -303,6 +312,159 @@ const createPatient = async (req, res) => {
 };
 
 
+// Delete Message 
+
+
+const deleteMessage = async (req, res) => {
+  const userId = req.user.id;
+  const messageId = req.params.message_id;
+  try {
+    // Check if the user is the sender of the message
+    const result = await pool.query(
+      'SELECT * FROM messages WHERE id = $1',
+      [messageId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Message not found');
+    }
+
+    const message = result.rows[0];
+
+    if (message.sender_id !== userId) {
+      return res.status(403).send('You can only delete your own messages');
+    }
+
+    await pool.query('DELETE FROM messages WHERE id = $1', [messageId]);
+    res.status(200).send('Message deleted');
+  } catch (err) {
+    console.error('Error in deleteMessage:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+// Create Doctor
+
+const createDoctor = async (req, res) => {
+  const adminId = req.params.admin_id;
+  const requester = req.user;
+  
+  if (requester.role !== 'admin' || requester.id !== adminId) {
+    return res.status(403).send('Only an admin can create doctors');
+  }
+
+  const { email, password, name } = req.body;
+  if (!email || !password || !name) {
+    return res.status(400).send('Missing email, name, or password');
+  }
+
+  try {
+    const exists = await pool.query("SELECT 1 FROM users WHERE data->>'email' = $1", [email]);
+    if (exists.rowCount > 0) {
+      return res.status(409).send('Email already in use');
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    const userRes = await pool.query(
+      `INSERT INTO users (role, data)
+       VALUES ('doctor', $1)
+       RETURNING id`,
+      [{ email, name, password: hashed }]
+    );
+
+    const doctorId = userRes.rows[0].id;
+
+    await pool.query(`INSERT INTO doctors (id) VALUES ($1)`, [doctorId]);
+
+    res.status(201).json({ id: doctorId, email, name });
+  } catch (err) {
+    console.error('Error in createDoctor:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+// Get all Doctors
+
+const getAllDoctors = async (req, res) => {
+  const requester = req.user;
+
+  if (requester.role !== 'admin') {
+    return res.status(403).send('Only an admin can view all doctors');
+  }
+
+  try {
+    const result = await pool.query(`
+      SELECT id, data->>'name' AS name, data->>'email' AS email
+      FROM users
+      WHERE role = 'doctor'
+    `);
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Error in getAllDoctors:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+///         DELETE  A   PATIENT AND THEIR MESSAGES
+
+const deletePatient = async (req, res) => {
+  const { patientId } = req.params;
+
+  try {
+    // Delete messages related to this patient
+    await pool.query('DELETE FROM messages WHERE sender_id = $1 OR recipient_id = $1', [patientId]);
+
+    // Delete the patient
+    const result = await pool.query('DELETE FROM users WHERE id = $1 AND role = $2 RETURNING *', [patientId, 'patient']);
+
+    if (result.rowCount === 0) {
+      return res.status(404).send('Patient not found or already deleted.');
+    }
+
+    res.status(200).send('Patient and associated messages deleted.');
+  } catch (err) {
+    console.error('Error deleting patient:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+
+
+//   DELETE A DOCTOR AND THEIR PATIENTS AND MESSAGES
+const deleteDoctor = async (req, res) => {
+  const { doctor_id } = req.params;
+
+  try {
+    // Step 1: Get all patient IDs assigned to this doctor
+    const patientsResult = await pool.query(
+      'SELECT patient_id FROM doctor_patients WHERE doctor_id = $1',
+      [doctor_id]
+    );
+
+    // Step 2: Delete each patient via their entry in `users`, which cascades everything else
+    for (const row of patientsResult.rows) {
+      await pool.query('DELETE FROM users WHERE id = $1 AND role = $2', [row.patient_id, 'patient']);
+    }
+
+    // Step 3: Delete the doctor via `users`, which cascades to `doctors` and `doctor_patients`
+    const deleteDoctor = await pool.query(
+      'DELETE FROM users WHERE id = $1 AND role = $2 RETURNING *',
+      [doctor_id, 'doctor']
+    );
+
+    if (deleteDoctor.rowCount === 0) {
+      return res.status(404).send('Doctor not found');
+    }
+
+    res.status(200).send('Doctor, patients, and associated data successfully deleted');
+  } catch (err) {
+    console.error('Error deleting doctor:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 // ───── APP SETUP ─────────────────────────────────────────────────────────────────
 const app = express();
@@ -325,13 +487,16 @@ app.use(OpenApiValidator.middleware({
 // ───── ROUTES ────────────────────────────────────────────────────────────────────
 app.post('/v0/login', login);
 app.get('/v0/home', check, getFingers);
-app.get('/v0/messages/:patient_id', check, getMessages);
-app.post('/v0/messages/:patient_id', check, sendMessage);
+app.get('/v0/getmessages/:patient_id', check, getMessages);
+app.post('/v0/sendmessage/:patient_id', check, sendMessage);
 app.get('/v0/home/:doctor_id', check, getPatients);
 app.get('/v0/doctor/:patient_id', check, getDoctorForPatient);
 app.post('/v0/create/:doctor_id', check, createPatient);
-
-
+app.delete('/v0/deletemessage/:message_id', check, deleteMessage);
+app.post('/v0/createdoctor/:admin_id', check, createDoctor);
+app.get('/v0/doctors', check, getAllDoctors);
+app.delete('/v0/deletepatient/:patientId', check, deletePatient);
+app.delete('/v0/deletedoctor/:doctor_id', check, deleteDoctor);
 
 // ───── ERROR HANDLER ─────────────────────────────────────────────────────────────
 app.use((err, req, res, next) => {

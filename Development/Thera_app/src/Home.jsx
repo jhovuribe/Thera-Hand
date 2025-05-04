@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -67,7 +68,7 @@ const drawerWidth = 273;
  * @return {JSX.Element} The rendered ResponsiveDrawer component.
  */
 
-const MessageDialog = React.memo(({ open, onClose, messageContent, setMessageContent, messages, selectedUser, isDoctor, doctorName, handleSendMessage }) => (
+const MessageDialog = React.memo(({ open, onClose, messageContent, setMessageContent, messages, selectedUser, isDoctor, doctorName, handleSendMessage, handleDeleteMessage }) => (
   <Dialog fullScreen open={open} onClose={onClose}>
     <Box sx={{ position: 'fixed', bottom: 5, right: 10, zIndex: 6000 }}>
       <TextField
@@ -108,15 +109,15 @@ const MessageDialog = React.memo(({ open, onClose, messageContent, setMessageCon
         return (
           <React.Fragment key={msg.id}>
             <ListItemText
-              sx={{ ml: isSender ? '55vw' : 3, mr: isSender ? 3 : '55vw' }}
+              sx={{ ml: isSender ? '55vw' : 3, mr: isSender ? '10vw' : '55vw' }}
               disableTypography
               primary={
                 <>
                   <Box>
                     <Typography variant="overline" color="text.primary">
                       {isSender
-                        ? `YOU AT ${new Date(msg.created_at || Date.now()).toLocaleString()}`
-                        : `${(selectedUser?.name || doctorName || selectedUser?.email || 'UNKNOWN').toUpperCase()} AT ${new Date(msg.created_at || Date.now()).toLocaleString()}`
+                        ? `YOU AT ${new Date(msg.sent_at).toLocaleString()}`
+                        : `${(selectedUser?.name || doctorName || selectedUser?.email || 'UNKNOWN').toUpperCase()} AT ${new Date(msg.sent_at || Date.now()).toLocaleString()}`
                       }
                     </Typography>
 
@@ -129,6 +130,13 @@ const MessageDialog = React.memo(({ open, onClose, messageContent, setMessageCon
                 </>
               }
             />
+            {isSender && (
+              <Box sx={{ml: '93vw' < 5 ? 5 : '94vw', position: "relative", mt: -5}}>
+              <IconButton edge="start" color="warning">
+                 <DeleteOutlineIcon onClick={() => handleDeleteMessage(msg.id)}/>
+              </IconButton>
+              </Box>
+            )}
             <Divider />
           </React.Fragment>
         );
@@ -154,6 +162,7 @@ function Home() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    setSelectedUser('');
     history('/login');
   };
 
@@ -173,14 +182,14 @@ function Home() {
 
   const handleSendMessage = async () => {
     if (!messageContent?.trim()) return;
-
+  
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) return;
-
+  
     try {
       const patientId = user.role === 'doctor' ? selectedUser?.id : user.id;
-
-      const response = await fetch(`http://localhost:3010/v0/messages/${patientId}`, {
+  
+      const response = await fetch(`http://localhost:3010/v0/sendmessage/${patientId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,14 +197,19 @@ function Home() {
         },
         body: JSON.stringify({ content: messageContent }),
       });
-
+      console.log(response);
       if (response.ok) {
+        const data = await response.json(); // expecting id, sent_at, etc.
+  
         const newMessage = {
+          id: data.id, // the UUID returned from backend
           sender_id: user.id,
-          recipient_id: user.role === 'doctor' ? selectedUser?.id : doctorName,
+          recipient_id: user.role === 'doctor' ? selectedUser?.id : doctorID,
           content: messageContent,
-          id: Date.now(),
+          sent_at: data.sent_at, // get sent_at from backend
         };
+  
+        console.log('New message:', newMessage);
         setMessages((prev) => [...prev, newMessage]);
         setMessageContent('');
       } else {
@@ -206,7 +220,31 @@ function Home() {
       console.error('Error sending message:', error);
     }
   };
+  
 
+  const handleDeleteMessage = async (messageId) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) return;
+  
+    try {
+      console.log(messageId);
+      const response = await fetch(`http://localhost:3010/v0/deletemessage/${messageId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+      });
+  
+      if (response.ok) {
+        setMessages((prev) => prev.filter((msg) => msg.id !== messageId));
+      } else {
+        const errorText = await response.text();
+        console.error('Delete message failed:', errorText);
+      }
+    } catch (error) {
+      console.error('Error deleting message:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -218,7 +256,6 @@ function Home() {
       }
 
       if (stored?.role !== 'doctor') {
-        console.warn('Not a doctor, skipping fetch');
         return;
       }
 
@@ -228,10 +265,10 @@ function Home() {
           Accept: 'application/json',
         },
       });
-
       if (response.ok) {
         const data = await response.json();
         setPatients(data);
+        setSelectedUser(data[0]);
       } else {
         const err = await response.text();
         console.error('Failed to load patients:', err);
@@ -244,7 +281,6 @@ function Home() {
 
   const handleUserSelect = (user) => {
     setSelectedUser(user);
-    console.log('Selected user:', user);
   };
 
   const handleSelectExercise = (exercise, popupState) => {
@@ -274,6 +310,7 @@ function Home() {
       setMobileOpen(false);
     }
   }, [isMobile]);
+
   const handleClickOpen = () => {
     setOpen(true);
     setNoButtons(!noButtons);
@@ -298,6 +335,7 @@ function Home() {
 
   const [value, setValue] = React.useState(0);
   const isDoctor = JSON.parse(localStorage.getItem('user'))?.role === 'doctor';
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -454,6 +492,7 @@ function Home() {
 
   const [messages, setMessages] = React.useState([]);
 
+
   useEffect(() => {
     const fetchMessages = async () => {
       const user = JSON.parse(localStorage.getItem('user'));
@@ -467,7 +506,7 @@ function Home() {
         patientId = selectedUser.id;
       }
 
-      const response = await fetch(`http://localhost:3010/v0/messages/${patientId}`, {
+      const response = await fetch(`http://localhost:3010/v0/getmessages/${patientId}`, {
         headers: {
           Authorization: `Bearer ${user.accessToken}`,
           Accept: 'application/json',
@@ -479,7 +518,7 @@ function Home() {
         setMessages(data);
       } else {
         const err = await response.text();
-        console.error('Failed to load messages:', err);
+        console.log(err);
       }
     };
 
@@ -487,6 +526,7 @@ function Home() {
   }, [selectedUser]);
 
   const [doctorName, setDoctorName] = React.useState('');
+  const [doctorID, setDoctorID] = React.useState('');
 
 
   useEffect(() => {
@@ -499,17 +539,16 @@ function Home() {
           Accept: 'application/json',
         },
       });
-      console.log("hi2");
       if (response.ok) {
         const doctor = await response.json(); // should return doctor object with .name
         setDoctorName(doctor.name);
+        setDoctorID(doctor.id);
       } else {
         console.error('Failed to fetch doctor');
       }
     };
 
     fetchDoctorName();
-    console.log(doctorName);
   }, []);
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -974,6 +1013,8 @@ function Home() {
           selectedUser={selectedUser}
           isDoctor={isDoctor}
           doctorName={doctorName}
+          doctorID={doctorID}
+          handleDeleteMessage={handleDeleteMessage}
         />
 
         <IconButton variant="contained" color="warning"
@@ -985,7 +1026,7 @@ function Home() {
           }} style={{ color: 'white' }}
           onClick={handleClickOpen}
         >
-          <Typography variant='overline'>{selectedUser.name}</Typography><AccountCircleIcon sx={{ ml: 0.75, mb: 0.275 }} />
+          <Typography variant='overline'>{isDoctor ? selectedUser.name : JSON.parse(localStorage.getItem('user')).name}</Typography><AccountCircleIcon sx={{ ml: 0.75, mb: 0.275 }} />
         </IconButton>
         <SimpleDialog
           selectedValue={selectedValue}

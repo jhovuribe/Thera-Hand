@@ -90,7 +90,7 @@ paths:
         401:
           description: Unauthorized
 
-  /messages/{patient_id}:
+  /getmessages/{patient_id}:
     get:
       security:
         - bearerAuth: []
@@ -122,7 +122,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedError'
-
+  /sendmessage/{patient_id}:
     post:
       security:
         - bearerAuth: []
@@ -144,6 +144,17 @@ paths:
       responses:
         201:
           description: Message successfully sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  sent_at:
+                    type: string
+                    format: date-time
         400:
           description: Invalid request
         401:
@@ -241,7 +252,175 @@ paths:
           description: Email already in use
         '500':
           description: Internal server error
+  /deletemessage/{message_id}:
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete a message by its ID (only sender can delete)
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          description: UUID of the message to delete
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Message successfully deleted
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden not the sender of the message
+        404:
+          description: Message not found
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
 
+  /createdoctor/{admin_id}:
+    post:
+      summary: Admin creates a new doctor
+      description: Only the logged-in admin can create and assign a new doctor
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: admin_id
+          required: true
+          schema:
+            type: string
+          description: ID of the logged-in admin creating the doctor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Doctor created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  name:
+                    type: string
+        '400':
+          description: Missing fields
+        '403':
+          description: Unauthorized or not the logged-in admin
+        '409':
+          description: Email already in use
+        '500':
+          description: Internal server error
+  /doctors:
+    get:
+      summary: Get all doctors (admin only)
+      description: Returns a list of all registered doctors. Only accessible by admins.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: List of doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – Only admins can access this
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /deletepatient/{patient_id}:
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete a patient and all messages involving them (as sender or recipient)
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          description: UUID of the patient to delete
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Patient and associated messages deleted
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – Only the patient's doctor or an admin may delete
+        404:
+          description: Patient not found
+        500:
+          description: Internal server error
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+  /deletedoctor/{doctor_id}:
+    delete:
+      security:
+        - bearerAuth: []
+      description: >
+        Deletes a doctor by ID. Also deletes all patients assigned to that doctor, 
+        and all messages involving those patients.
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          description: UUID of the doctor to delete
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Doctor, their patients, and associated messages successfully deleted
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – Only admins may delete doctors
+        404:
+          description: Doctor not found
+        500:
+          description: Internal server error
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedError'
+   
 components:
   securitySchemes:
     bearerAuth:

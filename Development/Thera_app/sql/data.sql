@@ -59,28 +59,28 @@ INSERT INTO doctor_patients (doctor_id, patient_id) VALUES
   );
 
 -- Insert fluff messages
-INSERT INTO messages (sender_id, recipient_id, content) VALUES
+INSERT INTO messages (sender_id, recipient_id, content, sent_at) VALUES
   -- dr. harrison to Aliyaa
   ((SELECT id FROM users WHERE data->>'email' = 'dr.harrison@therahand.com'),
    (SELECT id FROM users WHERE data->>'email' = 'aliyaa@therahand.com'),
-   'Hello Aliyaa, how is your therapy going this week?'),
+   'Hello Aliyaa, how is your therapy going this week?', '2024-12-02 14:30:00'),
 
   -- Aliyaa to dr. harrison
   ((SELECT id FROM users WHERE data->>'email' = 'aliyaa@therahand.com'),
    (SELECT id FROM users WHERE data->>'email' = 'dr.harrison@therahand.com'),
-   'Hi Dr. Harrison! I''m feeling better, thanks for checking in.'),
+   'Hi Dr. Harrison! I''m feeling better, thanks for checking in.', '2024-12-02 15:30:00'),
 
   -- Dr. Lu to Jhovanny
   ((SELECT id FROM users WHERE data->>'email' = 'dr.lu@therahand.com'),
    (SELECT id FROM users WHERE data->>'email' = 'jhovanny@therahand.com'),
-   'Jhovanny, please upload your finger movement logs.'),
+   'Jhovanny, please upload your finger movement logs.', '2024-12-03 14:30:00'),
 
   -- Jhovanny to Dr. Lu
   ((SELECT id FROM users WHERE data->>'email' = 'jhovanny@therahand.com'),
    (SELECT id FROM users WHERE data->>'email' = 'dr.lu@therahand.com'),
-   'Sure, I''ll do that by tonight.'),
+   'Sure, I''ll do that by tonight.', '2024-12-03 15:30:00'),
 
   -- Ethan to dr. harrison
   ((SELECT id FROM users WHERE data->>'email' = 'ethan@therahand.com'),
    (SELECT id FROM users WHERE data->>'email' = 'dr.harrison@therahand.com'),
-   'Hi Doctor, my index finger still hurts a little. Any tips?');
+   'Hi Doctor, my index finger still hurts a little. Any tips?', '2024-12-04 14:30:00');
