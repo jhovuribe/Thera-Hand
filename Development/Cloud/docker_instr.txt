@@ -1,0 +1,18 @@
+enter docker container:
+docker exec -it cloud_server /bin/bash
+exit
+
+start container:
+docker start cloud_server
+
+stop container:
+docker stop cloud_server
+
+local_machine setup:
+docker build -t my-cloud-server .
+docker run -p 5050:5000 ...
+
+check docker status:
+docker ps
+
+docker run -d --name cloud_server -p 5000:5000 my_cloud_server && docker ps
