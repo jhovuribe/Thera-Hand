@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/gpio.h"
+#include "driver/ledc.h"
+#include "esp_timer.h"
+
+#define SERVO1_GPIO      5
+#define SERVO2_GPIO      7
+#define SERVO_PWM_FREQ   50
+#define SERVO_PWM_RES    LEDC_TIMER_13_BIT
+#define SERVO1_CHANNEL   LEDC_CHANNEL_0
+#define SERVO2_CHANNEL   LEDC_CHANNEL_1
+
+#define BOOT_BTN_GPIO    9
+
+#define SERVO_NEUTRAL_MS 1.5f
+#define SERVO_FLEX_MS    1.55f  // Half the previous flex distance
+
+uint32_t ms_to_duty(float ms) {
+    float percent = (ms / 20.0f) * 100.0f;
+    return (uint32_t)((percent / 100.0f) * ((1 << 13) - 1));
+}
+
+void setup_servo(int gpio, ledc_channel_t channel) {
+    ledc_channel_config_t channel_conf = {
+        .gpio_num   = gpio,
+        .speed_mode = LEDC_LOW_SPEED_MODE,
+        .channel    = channel,
+        .timer_sel  = LEDC_TIMER_0,
+        .duty       = 0,
+        .hpoint     = 0
+    };
+    ledc_channel_config(&channel_conf);
+}
+
+void set_servo_pulse(ledc_channel_t channel, float pulse_ms) {
+    ledc_set_duty(LEDC_LOW_SPEED_MODE, channel, ms_to_duty(pulse_ms));
+    ledc_update_duty(LEDC_LOW_SPEED_MODE, channel);
+}
+
+bool boot_button_pressed() {
+    return gpio_get_level(BOOT_BTN_GPIO) == 0;
+}
+
+bool smooth_servo_move(ledc_channel_t ch1, ledc_channel_t ch2, float from_ms, float to_ms, int steps, int step_delay_ms) {
+    float delta = (to_ms - from_ms) / steps;
+    for (int i = 0; i <= steps; i++) {
+        if (boot_button_pressed()) return false;
+        float current = from_ms + delta * i;
+        set_servo_pulse(ch1, current);
+        set_servo_pulse(ch2, current);
+        vTaskDelay(pdMS_TO_TICKS(step_delay_ms));
+    }
+    return true;
+}
+
+void stop_all_servos() {
+    set_servo_pulse(SERVO1_CHANNEL, SERVO_NEUTRAL_MS);
+    set_servo_pulse(SERVO2_CHANNEL, SERVO_NEUTRAL_MS);
+    ledc_stop(LEDC_LOW_SPEED_MODE, SERVO1_CHANNEL, 0);
+    ledc_stop(LEDC_LOW_SPEED_MODE, SERVO2_CHANNEL, 0);
+}
+
+void app_main(void) {
+    // Configure BOOT button
+    gpio_config_t io_conf = {
+        .pin_bit_mask = (1ULL << BOOT_BTN_GPIO),
+        .mode = GPIO_MODE_INPUT,
+        .pull_up_en = GPIO_PULLUP_ENABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_DISABLE
+    };
+    gpio_config(&io_conf);
+
+    // LEDC timer setup
+    ledc_timer_config_t timer_conf = {
+        .speed_mode       = LEDC_LOW_SPEED_MODE,
+        .duty_resolution  = SERVO_PWM_RES,
+        .timer_num        = LEDC_TIMER_0,
+        .freq_hz          = SERVO_PWM_FREQ,
+        .clk_cfg          = LEDC_AUTO_CLK
+    };
+    ledc_timer_config(&timer_conf);
+
+    // Servo setup
+    setup_servo(SERVO1_GPIO, SERVO1_CHANNEL);
+    setup_servo(SERVO2_GPIO, SERVO2_CHANNEL);
+
+    printf("Starting gentle rehab (4 cycles, minimal movement)...\n");
+
+    const int total_cycles = 4;
+    for (int i = 0; i < total_cycles; i++) {
+        if (boot_button_pressed()) break;
+
+        printf("Cycle %d: Flexing slightly...\n", i + 1);
+        if (!smooth_servo_move(SERVO1_CHANNEL, SERVO2_CHANNEL, SERVO_NEUTRAL_MS, SERVO_FLEX_MS, 30, 100)) break;
+
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Hold
+
+        printf("Cycle %d: Returning to neutral...\n", i + 1);
+        if (!smooth_servo_move(SERVO1_CHANNEL, SERVO2_CHANNEL, SERVO_FLEX_MS, SERVO_NEUTRAL_MS, 30, 100)) break;
+
+        vTaskDelay(pdMS_TO_TICKS(1500)); // Rest
+    }
+
+    stop_all_servos();
+    printf("Exercise done or stopped.\n");
+}
