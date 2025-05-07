@@ -20,10 +20,9 @@
 #define WIFI_PASS "12345678"
 #define CLIENT_ID "ethan"
 #define API_KEY   "THERAethan_cred_2025"
-#define SERVER_URL "http://ec2-3-129-247-77.us-east-2.compute.amazonaws.com:5000" 
-//public DNS name for 1. Reliable routing & DNS resolution and 2. Avoids potental AWS-side restrictions for direct IP access
+#define SERVER_URL "https://35.215.126.127/" 
 
-//public IPV4 address of the server: 3.129.247.77
+//UPDATE: moved to Google Cloud: static IP address - https://35.215.126.127/ (therahand.info) -> DOMAIN NAME
 
 #define FLEX_CHANNEL ADC_CHANNEL_0
 #define FLEX_WIDTH ADC_WIDTH_BIT_12

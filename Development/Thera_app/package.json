@@ -32,7 +32,7 @@
     "react-dom": "*",
     "react-router-dom": "*",
     "swagger-ui-express": "*",
-    "three": "*"
+    "three": "^0.176.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "*",
